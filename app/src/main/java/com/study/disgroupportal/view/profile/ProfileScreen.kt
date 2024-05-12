@@ -65,9 +65,9 @@ import coil.compose.AsyncImage
 import com.study.disgroupportal.BuildConfig.VERSION_NAME
 import com.study.disgroupportal.DisGroupPortalApp.Companion.curScreen
 import com.study.disgroupportal.R
+import com.study.disgroupportal.model.employee.Employee
 import com.study.disgroupportal.model.navigation.Destination.LOGIN
 import com.study.disgroupportal.model.navigation.Destination.PROFILE
-import com.study.disgroupportal.model.employee.Employee
 import com.study.disgroupportal.tools.Navigation.navigateTo
 import com.study.disgroupportal.tools.getViewModel
 import com.study.disgroupportal.ui.theme.Background
@@ -75,7 +75,10 @@ import com.study.disgroupportal.ui.theme.GrayColor
 import com.study.disgroupportal.ui.theme.RedColor
 import com.study.disgroupportal.ui.theme.TeaColor
 import com.study.disgroupportal.view.components.DefaultButton
+import com.study.disgroupportal.viewmodel.EmployeeViewModel
 import com.study.disgroupportal.viewmodel.MainViewModel
+import com.study.disgroupportal.viewmodel.NewsViewModel
+import com.study.disgroupportal.viewmodel.RequestsViewModel
 
 @Composable
 fun ProfileScreen(navHostController: NavHostController) {
@@ -366,7 +369,10 @@ private fun HeaderCard(
 private fun DbSettingsCard(
     showDbSettings: MutableState<Boolean>
 ) {
+    val employeeVm = getViewModel<EmployeeViewModel>()
+    val requestsVm = getViewModel<RequestsViewModel>()
     val mainVm = getViewModel<MainViewModel>()
+    val newsVm = getViewModel<NewsViewModel>()
 
     Crossfade(
         targetState = showDbSettings.value,
@@ -382,6 +388,9 @@ private fun DbSettingsCard(
                     color = Black
                 ) {
                     mainVm.setDatabasePresets()
+                    employeeVm.uploadEmployees()
+                    requestsVm.uploadRequests(mainVm.user)
+                    newsVm.uploadNews()
                     showDbSettings.value = false
                 }
 
@@ -393,6 +402,10 @@ private fun DbSettingsCard(
                     color = RedColor
                 ) {
                     mainVm.clearDatabase()
+                    employeeVm.employees.clear()
+                    newsVm.news.clear()
+                    requestsVm.clearRequests()
+                    requestsVm.clearFilters()
                     showDbSettings.value = false
                 }
             }
@@ -407,6 +420,7 @@ private fun ExitDialog(
     showErrorDialog: MutableState<Boolean>,
 ) {
     val mainVm = getViewModel<MainViewModel>()
+    val newsVm = getViewModel<NewsViewModel>()
 
     if (showErrorDialog.value) {
         BasicAlertDialog(
@@ -469,6 +483,7 @@ private fun ExitDialog(
                                 dest = LOGIN
                             )
                             mainVm.logout()
+                            newsVm.clearNewVm()
                         },
                         colors = buttonColors(Transparent),
                         shape = RoundedCornerShape(12.dp)

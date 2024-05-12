@@ -47,7 +47,7 @@ import com.study.disgroupportal.ui.theme.Background
 import com.study.disgroupportal.ui.theme.CyanColor
 import com.study.disgroupportal.ui.theme.GrayColor
 import com.study.disgroupportal.ui.theme.TeaColor
-import com.study.disgroupportal.viewmodel.MainViewModel
+import com.study.disgroupportal.viewmodel.EmployeeViewModel
 
 @Composable
 fun PortalTopBar(
@@ -57,7 +57,7 @@ fun PortalTopBar(
     showBackButton: Boolean = false,
     onBackClick: () -> Unit = {}
 ) {
-    val mainVm = getViewModel<MainViewModel>()
+    val employeeVm = getViewModel<EmployeeViewModel>()
 
     Column {
         Box(
@@ -103,7 +103,7 @@ fun PortalTopBar(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
-                value = mainVm.searchText,
+                value = employeeVm.searchText,
                 focus = focus
             )
 

@@ -61,12 +61,14 @@ import com.study.disgroupportal.tools.getViewModel
 import com.study.disgroupportal.ui.theme.PrimaryColor
 import com.study.disgroupportal.view.components.DefaultButton
 import com.study.disgroupportal.viewmodel.MainViewModel
+import com.study.disgroupportal.viewmodel.RequestsViewModel
 
 @Composable
 fun AddRequestScreen(
     navHostController: NavHostController,
     requestId: String
 ) {
+    val requestsVm = getViewModel<RequestsViewModel>()
     val mainVm = getViewModel<MainViewModel>()
 
     var request by remember {
@@ -205,7 +207,13 @@ fun AddRequestScreen(
                 textColor = PrimaryColor,
                 color = White
             ) {
-                mainVm.addRequest(request.copy(problem = problem, theme = theme))
+                requestsVm.addRequest(
+                    request = request.copy(
+                        problem = problem,
+                        theme = theme
+                    ),
+                    user = mainVm.user
+                )
                 navHostController.navigateUp()
             }
         }

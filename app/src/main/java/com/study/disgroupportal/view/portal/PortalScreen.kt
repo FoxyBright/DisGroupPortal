@@ -33,6 +33,7 @@ import com.study.disgroupportal.model.portal.Division
 import com.study.disgroupportal.model.portal.Tile
 import com.study.disgroupportal.tools.getViewModel
 import com.study.disgroupportal.ui.theme.Background
+import com.study.disgroupportal.viewmodel.EmployeeViewModel
 import com.study.disgroupportal.viewmodel.MainViewModel
 
 private const val defaultTitle = "Корпоративный портал"
@@ -126,8 +127,9 @@ private fun Content(
     modifier: Modifier = Modifier,
     listState: LazyListState
 ) {
+    val employeeVm = getViewModel<EmployeeViewModel>()
     val mainVm = getViewModel<MainViewModel>()
-    LaunchedEffect(Unit) { mainVm.uploadEmployees() }
+    LaunchedEffect(Unit) { employeeVm.uploadEmployees() }
 
     LaunchedEffect(division.value, departament.value, employee.value) {
         title.value = when {
@@ -161,18 +163,18 @@ private fun Content(
     }
 
     val employees = remember(
-        mainVm.employees.toList(),
-        mainVm.searchText.value,
+        employeeVm.employees.toList(),
+        employeeVm.searchText.value,
         division.value, departament.value
     ) {
-        mainVm.employees.filter { employee ->
+        employeeVm.employees.filter { employee ->
             val inDivision = division.value
                 ?.run { employee.departament?.division == this }
                 ?: true
             val inDepartament = departament.value
                 ?.run { employee.departament == this }
                 ?: true
-            mainVm.searchText.value.let { text ->
+            employeeVm.searchText.value.let { text ->
                 if (text.isNotBlank()) employee.run {
                     duties.any { it.contains(text) }
                             || name.contains(text)
@@ -189,9 +191,9 @@ private fun Content(
     }
 
     val showEmployees by remember(
-        mainVm.searchText.value, departament.value, searchFocus
+        employeeVm.searchText.value, departament.value, searchFocus
     ) {
-        val show = mainVm.searchText.value.isNotBlank()
+        val show = employeeVm.searchText.value.isNotBlank()
                 || departament.value != null
                 || searchFocus
         mutableStateOf(show)

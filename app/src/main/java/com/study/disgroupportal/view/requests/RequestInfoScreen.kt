@@ -80,13 +80,16 @@ import com.study.disgroupportal.ui.theme.RedColor
 import com.study.disgroupportal.view.components.DefaultButton
 import com.study.disgroupportal.view.components.ProgressIndicator
 import com.study.disgroupportal.viewmodel.MainViewModel
+import com.study.disgroupportal.viewmodel.RequestsViewModel
 
 @Composable
 fun RequestInfoScreen(
     navHostController: NavHostController,
     requestId: String,
 ) {
+    val requestsVm = getViewModel<RequestsViewModel>()
     val mainVm = getViewModel<MainViewModel>()
+
     var request by remember(requestId) {
         mutableStateOf<Request?>(null)
     }
@@ -187,7 +190,10 @@ fun RequestInfoScreen(
                             textColor = White,
                             color = RedColor
                         ) {
-                            mainVm.deleteRequest(this@apply)
+                            requestsVm.deleteRequest(
+                                request = this@apply,
+                                user = mainVm.user
+                            )
                             navHostController.navigateUp()
                         }
                     }
@@ -208,11 +214,12 @@ fun RequestInfoScreen(
                                 modifier = Modifier.weight(1f),
                                 color = RedColor
                             ) {
-                                mainVm.answerRequest(
-                                    copy(
+                                requestsVm.answerRequest(
+                                    request = copy(
                                         answer = comment.value.trim(),
                                         status = CANCELED
-                                    )
+                                    ),
+                                    user = mainVm.user
                                 )
                                 navHostController.navigateUp()
                             }
@@ -224,11 +231,12 @@ fun RequestInfoScreen(
                                 modifier = Modifier.weight(1f),
                                 color = EcologyColor
                             ) {
-                                mainVm.answerRequest(
-                                    copy(
+                                requestsVm.answerRequest(
+                                    request = copy(
                                         answer = comment.value.trim(),
                                         status = CLOSED
-                                    )
+                                    ),
+                                    user = mainVm.user
                                 )
                                 navHostController.navigateUp()
                             }

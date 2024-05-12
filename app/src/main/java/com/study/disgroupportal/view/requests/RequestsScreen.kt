@@ -59,19 +59,21 @@ import com.study.disgroupportal.ui.theme.PrimaryColor
 import com.study.disgroupportal.view.components.DefaultPullRefreshContainer
 import com.study.disgroupportal.view.components.ProgressIndicator
 import com.study.disgroupportal.viewmodel.MainViewModel
+import com.study.disgroupportal.viewmodel.RequestsViewModel
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
 fun RequestsScreen(navHostController: NavHostController) {
     val mainVm = getViewModel<MainViewModel>()
+    val requestsVm = getViewModel<RequestsViewModel>()
 
-    val themeFilters = mainVm
+    val themeFilters = requestsVm
         .requestThemeFilters.collectAsState()
 
-    val statusFilters = mainVm
+    val statusFilters = requestsVm
         .requestStatusFilters.collectAsState()
 
-    val requestList = mainVm.requests.collectAsState()
+    val requestList = requestsVm.requests.collectAsState()
 
     val requests = remember(
         statusFilters.value, themeFilters.value, requestList.value
@@ -89,13 +91,13 @@ fun RequestsScreen(navHostController: NavHostController) {
 
     LaunchedEffect(Unit) {
         DisGroupPortalApp.curScreen = REQUESTS
-        if (mainVm.firstUploadRequests) {
-            mainVm.uploadRequests()
+        if (requestsVm.firstUploadRequests) {
+            requestsVm.uploadRequests(mainVm.user)
         }
     }
 
     Crossfade(
-        targetState = mainVm.pendingRequests,
+        targetState = requestsVm.pendingRequests,
         label = "Requests animation"
     ) { loading ->
         Scaffold(
@@ -134,14 +136,14 @@ fun RequestsScreen(navHostController: NavHostController) {
             }
         ) { padding ->
             DefaultPullRefreshContainer(
-                refreshing = mainVm.refreshRequests,
+                refreshing = requestsVm.refreshRequests,
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Background)
                     .padding(padding),
                 onRefresh = {
-                    mainVm.refreshRequests = true
-                    mainVm.uploadRequests()
+                    requestsVm.refreshRequests = true
+                    requestsVm.uploadRequests(mainVm.user)
                 }
             ) {
                 when {
@@ -163,7 +165,7 @@ private fun Filters(
     statusFilters: List<RequestStatus>,
     modifier: Modifier = Modifier
 ) {
-    val mainVm = getViewModel<MainViewModel>()
+    val requestsVm = getViewModel<RequestsViewModel>()
 
     Column(Modifier.background(White)) {
         Text(
@@ -187,7 +189,7 @@ private fun Filters(
                     isSelected = statusFilters.isEmpty()
                             && themeFilters.isEmpty(),
                     text = stringResource(R.string.all)
-                ) { mainVm.clearFilters() }
+                ) { requestsVm.clearFilters() }
             }
 
             items(RequestStatus.entries) { status ->
@@ -203,7 +205,7 @@ private fun Filters(
                             CLOSED -> R.string.closed
                         }
                     )
-                ) { mainVm.changeStatusFilter(status) }
+                ) { requestsVm.changeStatusFilter(status) }
             }
 
             items(RequestTheme.entries) { theme ->
@@ -213,7 +215,7 @@ private fun Filters(
                 FilterItem(
                     text = stringResource(theme.label),
                     isSelected = isSelected
-                ) { mainVm.changeThemeFilter(theme) }
+                ) { requestsVm.changeThemeFilter(theme) }
             }
 
             item { Spacer(Modifier.width(8.dp)) }

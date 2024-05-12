@@ -61,7 +61,7 @@ import com.study.disgroupportal.tools.openGallery
 import com.study.disgroupportal.ui.theme.PrimaryColor
 import com.study.disgroupportal.view.components.DefaultButton
 import com.study.disgroupportal.view.requests.TopBar
-import com.study.disgroupportal.viewmodel.MainViewModel
+import com.study.disgroupportal.viewmodel.NewsViewModel
 
 @Composable
 @OptIn(ExperimentalPermissionsApi::class)
@@ -69,7 +69,7 @@ fun AddNewScreen(
     navHostController: NavHostController,
     newId: String
 ) {
-    val mainVm = getViewModel<MainViewModel>()
+    val newsVm = getViewModel<NewsViewModel>()
     val context = LocalContext.current
 
     var new by remember {
@@ -290,7 +290,7 @@ fun AddNewScreen(
                 textColor = PrimaryColor,
                 color = White
             ) {
-                mainVm.addNew(
+                newsVm.addNew(
                     new.copy(
                         title = title,
                         text = text,

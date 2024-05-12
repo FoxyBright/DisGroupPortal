@@ -68,13 +68,16 @@ import com.study.disgroupportal.ui.theme.Background
 import com.study.disgroupportal.ui.theme.PrimaryColor
 import com.study.disgroupportal.view.components.ProgressIndicator
 import com.study.disgroupportal.viewmodel.MainViewModel
+import com.study.disgroupportal.viewmodel.NewsViewModel
 
 @Composable
 fun NewInfoScreen(
     navHostController: NavHostController,
     newId: String,
 ) {
+    val newsVm = getViewModel<NewsViewModel>()
     val mainVm = getViewModel<MainViewModel>()
+
     val context = LocalContext.current
     var new by remember(newId) {
         mutableStateOf<New?>(null)
@@ -216,7 +219,7 @@ fun NewInfoScreen(
                                         },
                                         indication = null
                                     ) {
-                                        mainVm.deleteNew(this@apply)
+                                        newsVm.deleteNew(this@apply)
                                         navHostController.navigateUp()
                                     }
                             )

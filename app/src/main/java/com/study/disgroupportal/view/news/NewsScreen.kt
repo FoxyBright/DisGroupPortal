@@ -48,32 +48,32 @@ import com.study.disgroupportal.ui.theme.GrayColor
 import com.study.disgroupportal.ui.theme.TeaColor
 import com.study.disgroupportal.view.components.DefaultPullRefreshContainer
 import com.study.disgroupportal.view.components.ProgressIndicator
-import com.study.disgroupportal.viewmodel.MainViewModel
+import com.study.disgroupportal.viewmodel.NewsViewModel
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
 fun NewsScreen(
     navHostController: NavHostController,
 ) {
-    val mainVm = getViewModel<MainViewModel>()
+    val newsVm = getViewModel<NewsViewModel>()
 
     LaunchedEffect(Unit) {
         curScreen = NEWS
-        if (mainVm.news.isEmpty()) {
-            mainVm.uploadNews()
+        if (newsVm.news.isEmpty()) {
+            newsVm.uploadNews()
         }
     }
 
     Crossfade(
-        targetState = mainVm.pendingNews
-                && mainVm.news.isEmpty(),
+        targetState = newsVm.pendingNews
+                && newsVm.news.isEmpty(),
         label = "News animation",
     ) { loading ->
         DefaultPullRefreshContainer(
-            refreshing = mainVm.refreshNews,
+            refreshing = newsVm.refreshNews,
             onRefresh = {
-                mainVm.refreshNews = true
-                mainVm.uploadNews()
+                newsVm.refreshNews = true
+                newsVm.uploadNews()
             }
         ) {
             Scaffold(
@@ -102,7 +102,7 @@ fun NewsScreen(
                     LazyColumn(Modifier.padding(paddings)) {
                         item { Spacer(Modifier.height(20.dp)) }
 
-                        itemsIndexed(mainVm.news) { i, new ->
+                        itemsIndexed(newsVm.news) { i, new ->
                             NewItem(new) {
                                 navHostController.navigateTo(
                                     arg = NavArgument(NEW_INFO_ARG, new.id),
@@ -110,7 +110,7 @@ fun NewsScreen(
                                 )
                             }
 
-                            if(i != mainVm.news.lastIndex){
+                            if(i != newsVm.news.lastIndex){
                                 HorizontalDivider(
                                     modifier = Modifier
                                         .padding(horizontal = 16.dp)
