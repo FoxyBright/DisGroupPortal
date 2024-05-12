@@ -34,7 +34,6 @@ import com.study.disgroupportal.model.portal.Tile
 import com.study.disgroupportal.tools.getViewModel
 import com.study.disgroupportal.view.components.WhiteColor
 import com.study.disgroupportal.viewmodel.EmployeeViewModel
-import com.study.disgroupportal.viewmodel.MainViewModel
 
 private const val defaultTitle = "Корпоративный портал"
 
@@ -79,12 +78,6 @@ fun PortalScreen() {
         onBack = ::onBackClick
     )
 
-    LaunchedEffect(listState.isScrollInProgress) {
-        if (listState.isScrollInProgress) {
-            focusManager.clearFocus()
-        }
-    }
-
     Scaffold(
         topBar = {
             PortalTopBar(
@@ -128,7 +121,6 @@ private fun Content(
     listState: LazyListState
 ) {
     val employeeVm = getViewModel<EmployeeViewModel>()
-    val mainVm = getViewModel<MainViewModel>()
     LaunchedEffect(Unit) { employeeVm.uploadEmployees() }
 
     LaunchedEffect(division.value, departament.value, employee.value) {

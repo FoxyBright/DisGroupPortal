@@ -2,33 +2,43 @@ package com.study.disgroupportal.view.portal
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement.SpaceBetween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize.Max
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons.Default
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults.cardColors
 import androidx.compose.material3.CardDefaults.cardElevation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults.iconButtonColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Alignment.Companion.TopStart
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -100,9 +110,7 @@ fun PortalTopBar(
             Spacer(Modifier.height(12.dp))
 
             SearchRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                modifier = Modifier.padding(horizontal = 16.dp),
                 value = employeeVm.searchText,
                 focus = focus
             )
@@ -118,50 +126,85 @@ private fun SearchRow(
     focus: MutableState<Boolean>,
     modifier: Modifier = Modifier
 ) {
-    Card(
+    val employeeVm = getViewModel<EmployeeViewModel>()
+
+    Row(
         modifier = modifier
             .fillMaxWidth()
             .height(Max),
-        border = BorderStroke(
-            width = 2.dp,
-            color = when {
-                focus.value -> CyanColor
-                else -> Gray
-            },
-        ),
-        colors = cardColors(WhiteAbsolutelyColor),
-        elevation = cardElevation(1.dp),
-        shape = CircleShape
+        horizontalArrangement = SpaceBetween,
+        verticalAlignment = CenterVertically
     ) {
-        BasicTextField(
-            onValueChange = { value.value = it },
-            value = value.value,
-            textStyle = TextStyle(
-                fontWeight = Medium,
-                color = GrayColor,
-                fontSize = 18.sp
-            ),
-            singleLine = true,
-            maxLines = 1,
-            cursorBrush = SolidColor(CyanColor),
+        Card(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(Max)
-                .padding(18.dp, 8.dp)
-                .onFocusChanged { focus.value = it.isFocused },
-            keyboardOptions = KeyboardOptions(
-                capitalization = Sentences,
-                keyboardType = Text
-            )
-        ) { innerText ->
-            if (value.value.isBlank()) {
-                Text(
-                    text = stringResource(R.string.search),
-                    fontSize = 16.sp,
-                    color = Gray
+                .fillMaxHeight()
+                .weight(1f),
+            border = BorderStroke(
+                width = 2.dp,
+                color = when {
+                    focus.value -> CyanColor
+                    else -> Gray
+                },
+            ),
+            colors = cardColors(WhiteAbsolutelyColor),
+            elevation = cardElevation(1.dp),
+            shape = CircleShape
+        ) {
+            BasicTextField(
+                onValueChange = { value.value = it },
+                value = value.value,
+                textStyle = TextStyle(
+                    fontWeight = Medium,
+                    color = GrayColor,
+                    fontSize = 18.sp
+                ),
+                singleLine = true,
+                maxLines = 1,
+                cursorBrush = SolidColor(CyanColor),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(Max)
+                    .padding(18.dp, 8.dp)
+                    .onFocusChanged { focus.value = it.isFocused },
+                keyboardOptions = KeyboardOptions(
+                    capitalization = Sentences,
+                    keyboardType = Text
+                )
+            ) { innerText ->
+                if (value.value.isBlank()) {
+                    Text(
+                        text = stringResource(R.string.search),
+                        fontSize = 16.sp,
+                        color = Gray
+                    )
+                }
+                innerText()
+            }
+        }
+
+        if (focus.value) {
+            val focusManager = LocalFocusManager.current
+            Spacer(Modifier.width(8.dp))
+
+            IconButton(
+                colors = iconButtonColors(CyanColor),
+                onClick = {
+                    employeeVm.searchText.value = ""
+                    focusManager.clearFocus()
+                },
+                modifier = Modifier
+                    .size(24.dp)
+                    .clip(CircleShape)
+            ) {
+                Icon(
+                    imageVector = Default.Clear,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(3.dp),
+                    tint = WhiteColor
                 )
             }
-            innerText()
         }
     }
 }
