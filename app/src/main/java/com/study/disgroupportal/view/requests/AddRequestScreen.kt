@@ -25,6 +25,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardDefaults.cardColors
+import androidx.compose.material3.CardDefaults.cardElevation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -39,7 +40,6 @@ import androidx.compose.ui.Alignment.Companion.CenterStart
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.Color.Companion.Gray
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -58,8 +58,10 @@ import com.study.disgroupportal.model.navigation.Destination.ADD_REQUEST
 import com.study.disgroupportal.model.requests.Request
 import com.study.disgroupportal.model.requests.RequestTheme
 import com.study.disgroupportal.tools.getViewModel
-import com.study.disgroupportal.ui.theme.PrimaryColor
 import com.study.disgroupportal.view.components.DefaultButton
+import com.study.disgroupportal.view.components.TeaColor
+import com.study.disgroupportal.view.components.WhiteAbsolutelyColor
+import com.study.disgroupportal.view.components.WhiteColor
 import com.study.disgroupportal.viewmodel.MainViewModel
 import com.study.disgroupportal.viewmodel.RequestsViewModel
 
@@ -116,7 +118,7 @@ fun AddRequestScreen(
                         R.string.add_request
                     }
                 ),
-                color = PrimaryColor,
+                color = TeaColor,
                 fontWeight = Bold,
                 fontSize = 24.sp
             )
@@ -127,7 +129,7 @@ fun AddRequestScreen(
                 modifier = Modifier.padding(start = 20.dp),
                 text = stringResource(R.string.description),
                 fontWeight = SemiBold,
-                color = PrimaryColor,
+                color = TeaColor,
                 fontSize = 18.sp
             )
 
@@ -167,7 +169,7 @@ fun AddRequestScreen(
                 text = stringResource(R.string.select_theme),
                 modifier = Modifier.padding(start = 20.dp),
                 fontWeight = SemiBold,
-                color = PrimaryColor,
+                color = TeaColor,
                 fontSize = 18.sp
             )
 
@@ -181,13 +183,13 @@ fun AddRequestScreen(
 
                 items(RequestTheme.entries) {
                     Card(
-                        colors = cardColors(if (theme == it) PrimaryColor else White),
-                        elevation = CardDefaults.cardElevation(2.dp),
+                        colors = cardColors(if (theme == it) TeaColor else WhiteAbsolutelyColor),
+                        elevation = cardElevation(2.dp),
                         onClick = { theme = it },
                         shape = CircleShape
                     ) {
                         Text(
-                            color = if (theme == it) White else PrimaryColor,
+                            color = if (theme == it) WhiteColor else TeaColor,
                             modifier = Modifier.padding(6.dp, 4.dp),
                             text = stringResource(it.label),
                             fontWeight = Medium,
@@ -204,8 +206,8 @@ fun AddRequestScreen(
             DefaultButton(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 text = stringResource(R.string.send_request),
-                textColor = PrimaryColor,
-                color = White
+                textColor = TeaColor,
+                color = WhiteColor
             ) {
                 requestsVm.addRequest(
                     request = request.copy(
@@ -225,13 +227,13 @@ fun TopBar(navHostController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(PrimaryColor),
+            .background(TeaColor),
         contentAlignment = CenterStart
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_back_arrow),
             contentDescription = null,
-            tint = White,
+            tint = WhiteColor,
             modifier = Modifier
                 .padding(vertical = 6.dp)
                 .padding(start = 12.dp)

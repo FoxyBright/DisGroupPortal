@@ -27,9 +27,7 @@ import androidx.compose.ui.Alignment.Companion.TopStart
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Gray
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -43,10 +41,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.study.disgroupportal.R
 import com.study.disgroupportal.tools.getViewModel
-import com.study.disgroupportal.ui.theme.Background
-import com.study.disgroupportal.ui.theme.CyanColor
-import com.study.disgroupportal.ui.theme.GrayColor
-import com.study.disgroupportal.ui.theme.TeaColor
+import com.study.disgroupportal.view.components.BlackColor
+import com.study.disgroupportal.view.components.CyanColor
+import com.study.disgroupportal.view.components.GrayColor
+import com.study.disgroupportal.view.components.TeaColor
+import com.study.disgroupportal.view.components.WhiteAbsolutelyColor
+import com.study.disgroupportal.view.components.WhiteColor
 import com.study.disgroupportal.viewmodel.EmployeeViewModel
 
 @Composable
@@ -65,7 +65,7 @@ fun PortalTopBar(
                 .fillMaxWidth()
                 .background(
                     brush = Brush.verticalGradient(
-                        colors = listOf(Black, TeaColor)
+                        colors = listOf(BlackColor, TeaColor)
                     )
                 )
                 .padding(16.dp, 20.dp),
@@ -82,7 +82,7 @@ fun PortalTopBar(
                         painter = painterResource(R.drawable.ic_back_arrow),
                         modifier = Modifier.fillMaxSize(),
                         contentDescription = null,
-                        tint = White
+                        tint = WhiteColor
                     )
                 }
             }
@@ -90,8 +90,8 @@ fun PortalTopBar(
             Text(
                 textAlign = TextAlign.Center,
                 fontWeight = SemiBold,
+                color = WhiteColor,
                 fontSize = 20.sp,
-                color = White,
                 text = title
             )
         }
@@ -129,8 +129,8 @@ private fun SearchRow(
                 else -> Gray
             },
         ),
+        colors = cardColors(WhiteAbsolutelyColor),
         elevation = cardElevation(1.dp),
-        colors = cardColors(Background),
         shape = CircleShape
     ) {
         BasicTextField(

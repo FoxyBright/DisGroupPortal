@@ -31,10 +31,8 @@ import androidx.compose.ui.Alignment.Companion.CenterEnd
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
-import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.Color.Companion.Transparent
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale.Companion.Crop
 import androidx.compose.ui.platform.LocalContext
@@ -55,18 +53,19 @@ import coil.compose.AsyncImage
 import com.study.disgroupportal.DisGroupPortalApp
 import com.study.disgroupportal.R
 import com.study.disgroupportal.data.DataSource.getNewById
+import com.study.disgroupportal.model.employee.UserRole.ADMIN
 import com.study.disgroupportal.model.navigation.Destination.ADD_NEW
 import com.study.disgroupportal.model.navigation.Destination.NEW_INFO
 import com.study.disgroupportal.model.navigation.DestinationArg.NEW_INFO_ARG
 import com.study.disgroupportal.model.navigation.NavArgument
 import com.study.disgroupportal.model.news.New
-import com.study.disgroupportal.model.employee.UserRole.ADMIN
 import com.study.disgroupportal.tools.Navigation.navigateTo
 import com.study.disgroupportal.tools.WebWorker.openInWeb
 import com.study.disgroupportal.tools.getViewModel
-import com.study.disgroupportal.ui.theme.Background
-import com.study.disgroupportal.ui.theme.PrimaryColor
+import com.study.disgroupportal.view.components.BlackColor
 import com.study.disgroupportal.view.components.ProgressIndicator
+import com.study.disgroupportal.view.components.TeaColor
+import com.study.disgroupportal.view.components.WhiteColor
 import com.study.disgroupportal.viewmodel.MainViewModel
 import com.study.disgroupportal.viewmodel.NewsViewModel
 
@@ -93,7 +92,7 @@ fun NewInfoScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Background)
+            .background(WhiteColor)
             .verticalScroll(rememberScrollState())
     ) {
         new?.apply {
@@ -116,14 +115,14 @@ fun NewInfoScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(200.dp)
-                            .background(PrimaryColor),
+                            .background(TeaColor),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
                             text = stringResource(R.string.new_placeholder_image),
                             fontWeight = SemiBold,
-                            fontSize = 30.sp,
-                            color = White
+                            color = WhiteColor,
+                            fontSize = 30.sp
                         )
                     }
                 }
@@ -132,7 +131,7 @@ fun NewInfoScreen(
                     modifier = Modifier
                         .background(
                             brush = verticalGradient(
-                                listOf(Transparent, Black.copy(.5f))
+                                listOf(Transparent, BlackColor.copy(.5f))
                             )
                         )
                         .fillMaxWidth()
@@ -142,9 +141,9 @@ fun NewInfoScreen(
                     Text(
                         modifier = Modifier.padding(top = 20.dp),
                         fontWeight = SemiBold,
+                        color = WhiteColor,
                         fontSize = 22.sp,
                         textAlign = End,
-                        color = White,
                         text = title
                     )
                 }
@@ -154,7 +153,7 @@ fun NewInfoScreen(
                         .height(40.dp)
                         .background(
                             brush = verticalGradient(
-                                listOf(Black.copy(.5f), Transparent)
+                                listOf(BlackColor.copy(.5f), Transparent)
                             )
                         ),
                     contentAlignment = Alignment.CenterStart
@@ -162,7 +161,7 @@ fun NewInfoScreen(
                     Icon(
                         painter = painterResource(R.drawable.ic_back_arrow),
                         contentDescription = null,
-                        tint = White,
+                        tint = WhiteColor,
                         modifier = Modifier
                             .padding(start = 12.dp)
                             .size(24.dp)
@@ -183,7 +182,7 @@ fun NewInfoScreen(
                                 imageVector = ImageVector
                                     .vectorResource(R.drawable.ic_edit),
                                 contentDescription = null,
-                                tint = White,
+                                tint = WhiteColor,
                                 modifier = Modifier
                                     .padding(end = 12.dp)
                                     .size(24.dp)
@@ -209,7 +208,7 @@ fun NewInfoScreen(
                                 imageVector = ImageVector
                                     .vectorResource(R.drawable.ic_delete),
                                 contentDescription = null,
-                                tint = White,
+                                tint = WhiteColor,
                                 modifier = Modifier
                                     .padding(end = 12.dp)
                                     .size(24.dp)
@@ -246,7 +245,7 @@ fun NewInfoScreen(
             val sourceText = buildAnnotatedString {
                 append(stringResource(R.string.source))
 
-                withStyle(SpanStyle(PrimaryColor)) {
+                withStyle(SpanStyle(TeaColor)) {
                     append(" $riaNews")
                 }
 

@@ -11,7 +11,7 @@ import androidx.navigation.NavHostController
 import com.study.disgroupportal.DisGroupPortalApp.Companion.curScreen
 import com.study.disgroupportal.DisGroupPortalApp.Companion.startDest
 import com.study.disgroupportal.tools.getViewModel
-import com.study.disgroupportal.ui.theme.Background
+import com.study.disgroupportal.view.components.WhiteColor
 import com.study.disgroupportal.view.Navigation
 import com.study.disgroupportal.viewmodel.MainViewModel
 
@@ -23,7 +23,7 @@ fun MainScreen(navHostController: NavHostController) {
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .background(Background),
+            .background(WhiteColor),
         bottomBar = {
             if (curScreen.showBottomBar) {
                 MainBottomBar(navHostController)

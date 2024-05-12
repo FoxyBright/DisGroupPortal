@@ -9,8 +9,6 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.White
-import com.study.disgroupportal.ui.theme.CyanColor
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
@@ -31,8 +29,8 @@ fun DefaultPullRefreshContainer(
         content()
         PullRefreshIndicator(
             modifier = Modifier.align(TopCenter),
+            backgroundColor = WhiteColor,
             contentColor = CyanColor,
-            backgroundColor = White,
             refreshing = refreshing,
             state = refreshState
         )

@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardDefaults.cardColors
+import androidx.compose.material3.CardDefaults.cardElevation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +29,6 @@ import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.RectangleShape
@@ -41,14 +42,15 @@ import androidx.navigation.NavHostController
 import com.study.disgroupportal.DisGroupPortalApp.Companion.curScreen
 import com.study.disgroupportal.model.navigation.BottomButtons
 import com.study.disgroupportal.tools.Navigation.navigateTo
-import com.study.disgroupportal.ui.theme.CyanColor
+import com.study.disgroupportal.view.components.BlackColor
+import com.study.disgroupportal.view.components.CyanColor
 
 @Composable
 fun MainBottomBar(navHostController: NavHostController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Black),
+            .background(BlackColor),
         verticalAlignment = CenterVertically,
         horizontalArrangement = SpaceAround
     ) {
@@ -57,8 +59,8 @@ fun MainBottomBar(navHostController: NavHostController) {
                 mutableStateOf(curScreen == button.dest)
             }
             Card(
-                colors = CardDefaults.cardColors(Transparent),
-                elevation = CardDefaults.cardElevation(0.dp),
+                colors = cardColors(Transparent),
+                elevation = cardElevation(0.dp),
                 shape = RectangleShape,
                 onClick = {
                     navHostController.navigateTo(

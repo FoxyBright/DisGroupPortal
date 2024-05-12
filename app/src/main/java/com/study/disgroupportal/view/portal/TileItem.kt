@@ -17,17 +17,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Medium
+import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
 import androidx.compose.ui.text.style.TextAlign.Companion.End
 import androidx.compose.ui.text.style.TextAlign.Companion.Start
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.study.disgroupportal.model.portal.Tile
-import com.study.disgroupportal.ui.theme.Background
-import com.study.disgroupportal.ui.theme.CyanColor
+import com.study.disgroupportal.view.components.BlackColor
+import com.study.disgroupportal.view.components.CyanColor
+import com.study.disgroupportal.view.components.GrayColor
+import com.study.disgroupportal.view.components.TeaColor
+import com.study.disgroupportal.view.components.WhiteColor
 
 @Composable
 fun TileItem(
@@ -41,9 +43,9 @@ fun TileItem(
             .height(IntrinsicSize.Max)
             .background(
                 color = if (isHighlight) {
-                    Black
+                    BlackColor
                 } else {
-                    Background
+                    WhiteColor
                 }
             )
             .clickable { onClick(tile) }
@@ -66,15 +68,17 @@ fun TileItem(
 
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                color = if (isHighlight) CyanColor else Black,
-                fontWeight = FontWeight.SemiBold,
+                color = if (isHighlight) CyanColor else TeaColor,
+                fontWeight = SemiBold,
                 textAlign = alignment,
                 text = tile.title,
                 fontSize = 16.sp
             )
 
+            Spacer(Modifier.height(6.dp))
+
             Text(
-                color = if (isHighlight) Background else Black,
+                color = if (isHighlight) WhiteColor else GrayColor,
                 modifier = Modifier.fillMaxWidth(),
                 text = tile.description,
                 textAlign = alignment,

@@ -44,11 +44,9 @@ import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.graphics.Color.Companion.Transparent
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale.Companion.Crop
@@ -70,11 +68,13 @@ import com.study.disgroupportal.model.navigation.Destination.LOGIN
 import com.study.disgroupportal.model.navigation.Destination.PROFILE
 import com.study.disgroupportal.tools.Navigation.navigateTo
 import com.study.disgroupportal.tools.getViewModel
-import com.study.disgroupportal.ui.theme.Background
-import com.study.disgroupportal.ui.theme.GrayColor
-import com.study.disgroupportal.ui.theme.RedColor
-import com.study.disgroupportal.ui.theme.TeaColor
+import com.study.disgroupportal.view.components.BlackColor
 import com.study.disgroupportal.view.components.DefaultButton
+import com.study.disgroupportal.view.components.GrayColor
+import com.study.disgroupportal.view.components.RedColor
+import com.study.disgroupportal.view.components.TeaColor
+import com.study.disgroupportal.view.components.WhiteAbsolutelyColor
+import com.study.disgroupportal.view.components.WhiteColor
 import com.study.disgroupportal.viewmodel.EmployeeViewModel
 import com.study.disgroupportal.viewmodel.MainViewModel
 import com.study.disgroupportal.viewmodel.NewsViewModel
@@ -94,14 +94,14 @@ fun ProfileScreen(navHostController: NavHostController) {
         mutableStateOf(false)
     }
 
-    Column(Modifier.background(Background)) {
+    Column(Modifier.background(WhiteColor)) {
         Spacer(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(3f)
                 .background(
                     brush = Brush.verticalGradient(
-                        listOf(TeaColor, Black)
+                        listOf(TeaColor, BlackColor)
                     ),
                     shape = RoundedCornerShape(
                         bottomEnd = 12.dp,
@@ -113,7 +113,7 @@ fun ProfileScreen(navHostController: NavHostController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(6f)
-                .background(Background)
+                .background(WhiteColor)
         )
     }
 
@@ -173,10 +173,10 @@ fun ProfileScreen(navHostController: NavHostController) {
 @Composable
 private fun DutyCard(user: Employee?) {
     Card(
+        colors = cardColors(WhiteAbsolutelyColor),
         modifier = Modifier.fillMaxWidth(),
-        elevation = cardElevation(2.dp),
-        colors = cardColors(White),
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(16.dp),
+        elevation = cardElevation(2.dp)
     ) {
         Spacer(Modifier.height(16.dp))
 
@@ -223,10 +223,10 @@ private fun DutyRow(
 @Composable
 private fun Contacts(user: Employee?) {
     Card(
+        colors = cardColors(WhiteAbsolutelyColor),
         modifier = Modifier.fillMaxWidth(),
-        elevation = cardElevation(2.dp),
-        colors = cardColors(White),
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(16.dp),
+        elevation = cardElevation(2.dp)
     ) {
         Spacer(Modifier.height(16.dp))
 
@@ -290,10 +290,10 @@ private fun HeaderCard(
 ) {
     Box {
         Card(
+            colors = cardColors(WhiteAbsolutelyColor),
             modifier = Modifier.fillMaxWidth(),
-            elevation = cardElevation(2.dp),
-            colors = cardColors(White),
-            shape = RoundedCornerShape(16.dp)
+            shape = RoundedCornerShape(16.dp),
+            elevation = cardElevation(2.dp)
         ) {
             Row(
                 modifier = Modifier
@@ -354,10 +354,10 @@ private fun HeaderCard(
             modifier = Modifier
                 .offset(y = (-60).dp)
                 .size(120.dp)
-                .background(White, CircleShape)
+                .background(WhiteColor, CircleShape)
                 .clip(CircleShape)
                 .align(TopCenter)
-                .border(3.dp, White, CircleShape),
+                .border(3.dp, WhiteColor, CircleShape),
             model = user?.avatarUrl,
             contentDescription = null,
             contentScale = Crop
@@ -384,8 +384,8 @@ private fun DbSettingsCard(
 
                 DefaultButton(
                     text = stringResource(R.string.set_database_presets),
-                    textColor = White,
-                    color = Black
+                    textColor = WhiteColor,
+                    color = BlackColor
                 ) {
                     mainVm.setDatabasePresets()
                     employeeVm.uploadEmployees()
@@ -398,7 +398,7 @@ private fun DbSettingsCard(
 
                 DefaultButton(
                     text = stringResource(R.string.clear_database),
-                    textColor = White,
+                    textColor = WhiteColor,
                     color = RedColor
                 ) {
                     mainVm.clearDatabase()
@@ -430,7 +430,7 @@ private fun ExitDialog(
         ) {
             Column(
                 modifier = Modifier
-                    .background(White, RoundedCornerShape(16.dp))
+                    .background(WhiteColor, RoundedCornerShape(16.dp))
                     .padding(16.dp),
                 horizontalAlignment = CenterHorizontally
             ) {

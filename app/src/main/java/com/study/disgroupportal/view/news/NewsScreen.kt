@@ -25,7 +25,6 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color.Companion.LightGray
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.layout.ContentScale.Companion.Crop
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
@@ -44,10 +43,11 @@ import com.study.disgroupportal.model.navigation.NavArgument
 import com.study.disgroupportal.model.news.New
 import com.study.disgroupportal.tools.Navigation.navigateTo
 import com.study.disgroupportal.tools.getViewModel
-import com.study.disgroupportal.ui.theme.GrayColor
-import com.study.disgroupportal.ui.theme.TeaColor
 import com.study.disgroupportal.view.components.DefaultPullRefreshContainer
+import com.study.disgroupportal.view.components.GrayColor
 import com.study.disgroupportal.view.components.ProgressIndicator
+import com.study.disgroupportal.view.components.TeaColor
+import com.study.disgroupportal.view.components.WhiteColor
 import com.study.disgroupportal.viewmodel.NewsViewModel
 
 @Composable
@@ -184,8 +184,8 @@ private fun NewItem(
                 Text(
                     text = stringResource(R.string.new_placeholder_image),
                     fontWeight = SemiBold,
-                    fontSize = 30.sp,
-                    color = White
+                    color = WhiteColor,
+                    fontSize = 30.sp
                 )
             }
         }

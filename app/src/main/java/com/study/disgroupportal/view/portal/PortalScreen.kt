@@ -32,7 +32,7 @@ import com.study.disgroupportal.model.portal.Departament.Companion.getListByDivi
 import com.study.disgroupportal.model.portal.Division
 import com.study.disgroupportal.model.portal.Tile
 import com.study.disgroupportal.tools.getViewModel
-import com.study.disgroupportal.ui.theme.Background
+import com.study.disgroupportal.view.components.WhiteColor
 import com.study.disgroupportal.viewmodel.EmployeeViewModel
 import com.study.disgroupportal.viewmodel.MainViewModel
 
@@ -97,7 +97,7 @@ fun PortalScreen() {
         },
         modifier = Modifier
             .fillMaxSize()
-            .background(Background)
+            .background(WhiteColor)
             .clickable(
                 interactionSource = remember {
                     MutableInteractionSource()

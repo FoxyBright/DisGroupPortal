@@ -6,4 +6,6 @@ import com.study.disgroupportal.model.employee.Employee
 @Composable
 fun EmployeeInfoScreen(employee: Employee){
 
+    
+
 }

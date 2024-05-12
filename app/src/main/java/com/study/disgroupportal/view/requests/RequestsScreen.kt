@@ -30,7 +30,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Medium
@@ -40,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.study.disgroupportal.DisGroupPortalApp
 import com.study.disgroupportal.R
+import com.study.disgroupportal.model.employee.UserRole.USER
 import com.study.disgroupportal.model.navigation.Destination.ADD_REQUEST
 import com.study.disgroupportal.model.navigation.Destination.REQUESTS
 import com.study.disgroupportal.model.navigation.Destination.REQUEST_INFO
@@ -51,13 +51,13 @@ import com.study.disgroupportal.model.requests.RequestStatus.CANCELED
 import com.study.disgroupportal.model.requests.RequestStatus.CLOSED
 import com.study.disgroupportal.model.requests.RequestStatus.OPENED
 import com.study.disgroupportal.model.requests.RequestTheme
-import com.study.disgroupportal.model.employee.UserRole.USER
 import com.study.disgroupportal.tools.Navigation.navigateTo
 import com.study.disgroupportal.tools.getViewModel
-import com.study.disgroupportal.ui.theme.Background
-import com.study.disgroupportal.ui.theme.PrimaryColor
 import com.study.disgroupportal.view.components.DefaultPullRefreshContainer
 import com.study.disgroupportal.view.components.ProgressIndicator
+import com.study.disgroupportal.view.components.TeaColor
+import com.study.disgroupportal.view.components.WhiteAbsolutelyColor
+import com.study.disgroupportal.view.components.WhiteColor
 import com.study.disgroupportal.viewmodel.MainViewModel
 import com.study.disgroupportal.viewmodel.RequestsViewModel
 
@@ -110,8 +110,8 @@ fun RequestsScreen(navHostController: NavHostController) {
             floatingActionButton = {
                 if (mainVm.user?.role == USER) {
                     Card(
+                        colors = cardColors(WhiteAbsolutelyColor),
                         elevation = cardElevation(4.dp),
-                        colors = cardColors(White),
                         shape = CircleShape,
                         onClick = {
                             navHostController.navigateTo(
@@ -126,7 +126,7 @@ fun RequestsScreen(navHostController: NavHostController) {
                         Icon(
                             painter = painterResource(R.drawable.ic_plus),
                             contentDescription = null,
-                            tint = PrimaryColor,
+                            tint = TeaColor,
                             modifier = Modifier
                                 .padding(16.dp)
                                 .size(20.dp)
@@ -139,7 +139,7 @@ fun RequestsScreen(navHostController: NavHostController) {
                 refreshing = requestsVm.refreshRequests,
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Background)
+                    .background(WhiteColor)
                     .padding(padding),
                 onRefresh = {
                     requestsVm.refreshRequests = true
@@ -167,12 +167,12 @@ private fun Filters(
 ) {
     val requestsVm = getViewModel<RequestsViewModel>()
 
-    Column(Modifier.background(White)) {
+    Column(Modifier.background(WhiteColor)) {
         Text(
             modifier = Modifier.padding(top = 6.dp, start = 6.dp),
             text = stringResource(R.string.filters),
             fontWeight = SemiBold,
-            color = PrimaryColor,
+            color = TeaColor,
             fontSize = 20.sp
         )
 
@@ -235,17 +235,17 @@ private fun FilterItem(
         onClick = onClick,
         colors = cardColors(
             containerColor = if (isSelected) {
-                PrimaryColor
+                TeaColor
             } else {
-                White
+                WhiteAbsolutelyColor
             }
         )
     ) {
         Text(
             color = if (isSelected) {
-                White
+                WhiteColor
             } else {
-                PrimaryColor
+                TeaColor
             },
             modifier = Modifier.padding(6.dp, 4.dp),
             fontWeight = Medium,
@@ -263,7 +263,7 @@ private fun RequestsContent(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(Background)
+            .background(WhiteColor)
             .padding(horizontal = 16.dp)
     ) {
         item { Spacer(Modifier.height(12.dp)) }

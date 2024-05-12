@@ -43,7 +43,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.LightGray
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -62,6 +61,8 @@ import androidx.navigation.NavHostController
 import com.study.disgroupportal.DisGroupPortalApp
 import com.study.disgroupportal.R
 import com.study.disgroupportal.data.DataSource
+import com.study.disgroupportal.model.employee.UserRole.ADMIN
+import com.study.disgroupportal.model.employee.UserRole.USER
 import com.study.disgroupportal.model.navigation.Destination
 import com.study.disgroupportal.model.navigation.Destination.ADD_REQUEST
 import com.study.disgroupportal.model.navigation.DestinationArg.REQUEST_INFO_ARG
@@ -70,15 +71,14 @@ import com.study.disgroupportal.model.requests.Request
 import com.study.disgroupportal.model.requests.RequestStatus.CANCELED
 import com.study.disgroupportal.model.requests.RequestStatus.CLOSED
 import com.study.disgroupportal.model.requests.RequestStatus.OPENED
-import com.study.disgroupportal.model.employee.UserRole.ADMIN
-import com.study.disgroupportal.model.employee.UserRole.USER
 import com.study.disgroupportal.tools.Navigation.navigateTo
 import com.study.disgroupportal.tools.getViewModel
-import com.study.disgroupportal.ui.theme.EcologyColor
-import com.study.disgroupportal.ui.theme.PrimaryColor
-import com.study.disgroupportal.ui.theme.RedColor
 import com.study.disgroupportal.view.components.DefaultButton
+import com.study.disgroupportal.view.components.GreenColor
 import com.study.disgroupportal.view.components.ProgressIndicator
+import com.study.disgroupportal.view.components.RedColor
+import com.study.disgroupportal.view.components.TeaColor
+import com.study.disgroupportal.view.components.WhiteColor
 import com.study.disgroupportal.viewmodel.MainViewModel
 import com.study.disgroupportal.viewmodel.RequestsViewModel
 
@@ -168,8 +168,8 @@ fun RequestInfoScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp),
-                            textColor = PrimaryColor,
-                            color = White
+                            textColor = TeaColor,
+                            color = WhiteColor
                         ) {
                             navHostController.navigateTo(
                                 dest = ADD_REQUEST,
@@ -187,7 +187,7 @@ fun RequestInfoScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp),
-                            textColor = White,
+                            textColor = WhiteColor,
                             color = RedColor
                         ) {
                             requestsVm.deleteRequest(
@@ -229,7 +229,7 @@ fun RequestInfoScreen(
                             DefaultButton(
                                 text = stringResource(R.string.allow_request),
                                 modifier = Modifier.weight(1f),
-                                color = EcologyColor
+                                color = GreenColor
                             ) {
                                 requestsVm.answerRequest(
                                     request = copy(
@@ -260,13 +260,13 @@ private fun TopBar(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(PrimaryColor),
+            .background(TeaColor),
         contentAlignment = Alignment.Center
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_back_arrow),
             contentDescription = null,
-            tint = White,
+            tint = WhiteColor,
             modifier = Modifier
                 .align(CenterStart)
                 .padding(start = 12.dp)
@@ -286,9 +286,9 @@ private fun TopBar(
                 append(" ")
                 append("$requestId")
             },
+            color = WhiteColor,
             fontWeight = Bold,
-            fontSize = 22.sp,
-            color = White
+            fontSize = 22.sp
         )
     }
 }
@@ -304,7 +304,7 @@ private fun Label(
         verticalAlignment = CenterVertically
     ) {
         Text(
-            color = PrimaryColor,
+            color = TeaColor,
             fontWeight = Bold,
             fontSize = 20.sp,
             text = title
@@ -343,7 +343,7 @@ private fun Content(request: Request) {
                 modifier = Modifier.align(CenterHorizontally),
                 text = stringResource(R.string.problem_description),
                 fontWeight = SemiBold,
-                color = PrimaryColor,
+                color = TeaColor,
                 fontSize = 18.sp
             )
 
@@ -372,7 +372,7 @@ private fun Content(request: Request) {
                     text = buildAnnotatedString {
                         withStyle(
                             SpanStyle(
-                                color = PrimaryColor,
+                                color = TeaColor,
                                 fontWeight = Medium
                             )
                         ) { append(stringResource(R.string.request_comment)) }
@@ -456,8 +456,8 @@ private fun Comment(comment: MutableState<String>) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
-                textColor = PrimaryColor,
-                color = White
+                textColor = TeaColor,
+                color = WhiteColor
             ) { showTextField = true }
         }
     }

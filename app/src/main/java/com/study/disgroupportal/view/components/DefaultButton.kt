@@ -9,8 +9,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Black
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.text.font.FontWeight.Companion.Medium
 import androidx.compose.ui.text.style.TextAlign.Companion.Center
 import androidx.compose.ui.unit.dp
@@ -20,8 +18,8 @@ import androidx.compose.ui.unit.sp
 fun DefaultButton(
     text: String,
     modifier: Modifier = Modifier,
-    textColor: Color = White,
-    color: Color = Black,
+    textColor: Color = WhiteColor,
+    color: Color = BlackColor,
     onClick: () -> Unit,
 ) {
     Card(

@@ -10,8 +10,6 @@ import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.study.disgroupportal.ui.theme.Background
-import com.study.disgroupportal.ui.theme.CyanColor
 
 @Composable
 fun ProgressIndicator(
@@ -21,7 +19,7 @@ fun ProgressIndicator(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Background),
+            .background(WhiteColor),
         contentAlignment = Center
     ) {
         CircularProgressIndicator(

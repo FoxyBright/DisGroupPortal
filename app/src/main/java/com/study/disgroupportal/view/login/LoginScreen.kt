@@ -41,12 +41,10 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush.Companion.horizontalGradient
-import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.graphics.Color.Companion.Transparent
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap.Companion.Round
 import androidx.compose.ui.platform.LocalFocusManager
@@ -69,9 +67,11 @@ import com.study.disgroupportal.model.navigation.Destination.LOGIN
 import com.study.disgroupportal.model.navigation.Destination.PORTAl
 import com.study.disgroupportal.tools.Navigation.navigateTo
 import com.study.disgroupportal.tools.getViewModel
-import com.study.disgroupportal.ui.theme.CyanColor
-import com.study.disgroupportal.ui.theme.GrayColor
-import com.study.disgroupportal.ui.theme.TeaColor
+import com.study.disgroupportal.view.components.BlackColor
+import com.study.disgroupportal.view.components.CyanColor
+import com.study.disgroupportal.view.components.GrayColor
+import com.study.disgroupportal.view.components.TeaColor
+import com.study.disgroupportal.view.components.WhiteColor
 import com.study.disgroupportal.viewmodel.MainViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -117,7 +117,7 @@ fun LoginScreen(navHostController: NavHostController) {
             .fillMaxSize()
             .background(
                 brush = horizontalGradient(
-                    colors = listOf(Black, TeaColor)
+                    colors = listOf(BlackColor, TeaColor)
                 )
             )
             .padding(horizontal = 16.dp)
@@ -142,8 +142,8 @@ fun LoginScreen(navHostController: NavHostController) {
             Text(
                 text = stringResource(R.string.corp_portal),
                 modifier = Modifier.padding(start = 10.dp),
-                fontSize = 22.sp,
-                color = White
+                color = WhiteColor,
+                fontSize = 22.sp
             )
         }
 
@@ -203,8 +203,8 @@ fun LoginScreen(navHostController: NavHostController) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(60.dp),
                             strokeWidth = 4.dp,
-                            strokeCap = Round,
-                            color = White
+                            color = WhiteColor,
+                            strokeCap = Round
                         )
                     }
                 } else {
@@ -256,8 +256,8 @@ fun LoginScreen(navHostController: NavHostController) {
                                 .fillMaxWidth()
                                 .padding(4.dp),
                             fontWeight = Medium,
-                            fontSize = 18.sp,
-                            color = White
+                            color = WhiteColor,
+                            fontSize = 18.sp
                         )
                     }
                 }
@@ -297,7 +297,7 @@ private fun ErrorDialog(
             Column(
                 horizontalAlignment = CenterHorizontally,
                 modifier = Modifier
-                    .background(White, RoundedCornerShape(16.dp))
+                    .background(WhiteColor, RoundedCornerShape(16.dp))
                     .padding(16.dp)
             ) {
                 Text(
@@ -363,7 +363,7 @@ private fun LoginTextField(
                 color = when {
                     isError -> Red
                     focused -> CyanColor
-                    else -> White
+                    else -> WhiteColor
                 },
                 width = 1.dp
             )
@@ -373,8 +373,8 @@ private fun LoginTextField(
             value = value.value,
             textStyle = TextStyle(
                 fontWeight = Medium,
-                fontSize = 18.sp,
-                color = White
+                color = WhiteColor,
+                fontSize = 18.sp
             ),
             singleLine = true,
             maxLines = 1,

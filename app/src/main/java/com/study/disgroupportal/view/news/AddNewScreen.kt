@@ -33,14 +33,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.Color.Companion.Gray
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale.Companion.Crop
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.font.FontWeight.Companion.Medium
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -58,8 +57,9 @@ import com.study.disgroupportal.model.news.New
 import com.study.disgroupportal.tools.getViewModel
 import com.study.disgroupportal.tools.neededStoragePermissions
 import com.study.disgroupportal.tools.openGallery
-import com.study.disgroupportal.ui.theme.PrimaryColor
 import com.study.disgroupportal.view.components.DefaultButton
+import com.study.disgroupportal.view.components.TeaColor
+import com.study.disgroupportal.view.components.WhiteColor
 import com.study.disgroupportal.view.requests.TopBar
 import com.study.disgroupportal.viewmodel.NewsViewModel
 
@@ -128,8 +128,8 @@ fun AddNewScreen(
                         R.string.add_new
                     }
                 ),
-                color = PrimaryColor,
-                fontWeight = FontWeight.Bold,
+                color = TeaColor,
+                fontWeight = Bold,
                 fontSize = 24.sp
             )
 
@@ -179,7 +179,7 @@ fun AddNewScreen(
                         ),
                         contentDescription = null,
                         modifier = Modifier.size(52.dp),
-                        tint = PrimaryColor
+                        tint = TeaColor
                     )
                 }
             }
@@ -254,7 +254,7 @@ fun AddNewScreen(
                 onValueChange = { link = it },
                 textStyle = TextStyle(
                     fontWeight = Medium,
-                    color = PrimaryColor,
+                    color = TeaColor,
                     fontSize = 14.sp
                 ),
                 value = link,
@@ -287,8 +287,8 @@ fun AddNewScreen(
             DefaultButton(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 text = stringResource(R.string.create_new),
-                textColor = PrimaryColor,
-                color = White
+                textColor = TeaColor,
+                color = WhiteColor
             ) {
                 newsVm.addNew(
                     new.copy(

@@ -34,7 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.study.disgroupportal.R
 import com.study.disgroupportal.model.requests.Request
-import com.study.disgroupportal.ui.theme.PrimaryColor
+import com.study.disgroupportal.view.components.TeaColor
+import com.study.disgroupportal.view.components.WhiteAbsolutelyColor
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -45,8 +46,8 @@ fun RequestItem(
     onClick: () -> Unit,
 ) {
     Card(
+        colors = cardColors(WhiteAbsolutelyColor),
         elevation = cardElevation(2.dp),
-        colors = cardColors(Color.White),
         modifier = Modifier.height(Max),
         onClick = onClick
     ) {
@@ -67,7 +68,7 @@ fun RequestItem(
                         withStyle(
                             SpanStyle(
                                 fontWeight = SemiBold,
-                                color = PrimaryColor
+                                color = TeaColor
                             )
                         ) { append(stringResource(R.string.request)) }
                         append(" ")
@@ -85,7 +86,7 @@ fun RequestItem(
                         withStyle(
                             SpanStyle(
                                 fontWeight = Medium,
-                                color = PrimaryColor
+                                color = TeaColor
                             )
                         ) { append(stringResource(R.string.theme)) }
                         append(" ")
