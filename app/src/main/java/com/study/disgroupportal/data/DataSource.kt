@@ -32,27 +32,33 @@ object DataSource {
         success(dbDao.getNews())
     }
 
-    suspend fun loginInGosuslugi(
+    suspend fun login(
         login: String,
         password: String,
         isAdministrateMode: Boolean,
     ) = withContext(IO) {
         delay(1000L)
-        employeesPresets.find { user ->
-            if (isAdministrateMode) {
-                user.role == ADMIN
-            } else {
-                login == user.login
-            } && user.password == password
-        }?.let { success(it) } ?: run {
+        getAllEmployees()
+            .getOrElse { emptyList() }
+            .ifEmpty { setDbPresets(); getAllEmployees().getOrElse { emptyList() } }
+            .find { user ->
+                if (isAdministrateMode) {
+                    user.role == ADMIN
+                } else {
+                    login == user.login
+                } && user.password == password
+            }?.let { success(it) } ?: run {
             failure(Throwable("Неверный логин или пароль"))
         }
     }
 
-    suspend fun getUser(token: Long) = withContext(IO) {
-        employeesPresets.find { it.id == token }?.let { success(it) } ?: run {
-            failure(Throwable("Токен устарел, перепройдите авторизацию"))
-        }
+    suspend fun getUser(token: String) = withContext(IO) {
+        getAllEmployees()
+            .getOrElse { emptyList() }
+            .ifEmpty { setDbPresets(); getAllEmployees().getOrElse { emptyList() } }
+            .find { it.id == token }
+            ?.let { success(it) }
+            ?: run { failure(Throwable("Токен устарел, перепройдите авторизацию")) }
     }
 
     suspend fun getNewById(id: Long) = withContext(IO) {
@@ -71,7 +77,7 @@ object DataSource {
         }
     }
 
-    suspend fun getUserRequests(userId: Long?) = withContext(IO) {
+    suspend fun getUserRequests(userId: String?) = withContext(IO) {
         userId?.let { id ->
             success(dbDao.getUserRequests(id).sortedBy { it.date })
         } ?: run {
@@ -107,7 +113,11 @@ object DataSource {
         dbDao.deleteEmployee(employee)
     }
 
+    suspend fun editEmployee(employee: Employee) = withContext(IO) {
+        dbDao.editEmployee(employee)
+    }
+
     suspend fun getAllEmployees() = withContext(IO) {
-        success(dbDao.getEmployee())
+        success(dbDao.getEmployees())
     }
 }

@@ -45,6 +45,8 @@
     <string name="edit_request">Редактирование запроса</string>
     <string name="add_new">Создание новости</string>
     <string name="edit_new">Редактирование новости</string>
+    <string name="edit">Редактировать</string>
+    <string name="save">Сохранить</string>
     <string name="delete_request">Удалить запрос</string>
     <string name="select_theme">Выберите тему запроса:</string>
     <string name="send_request">Отправить запрос</string>
@@ -59,4 +61,10 @@
     <string name="main_page">Главная</string>
     <string name="none">Отсутствует</string>
     <string name="search">Поиск сотрудников…</string>
+    <string name="edit_name_placeholder">Введите имя…</string>
+    <string name="edit_name_err">Имя не может быть пустым</string>
+    <string name="edit_post_err">Должность не может быть пустой</string>
+    <string name="edit_post_placeholder">Введите должность…</string>
+    <string name="duties">Должностные обязанности:</string>
+    <string name="edit_employee">Редактирование сотрудника</string>
 </resources>

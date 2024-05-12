@@ -31,6 +31,13 @@ class EmployeeViewModel(
         }
     }
 
+    fun editEmployee(employee: Employee) {
+        viewModelScope.launch {
+            DataSource.editEmployee(employee)
+            uploadEmployees()
+        }
+    }
+
     fun uploadEmployees() {
         viewModelScope.launch {
             DataSource.getAllEmployees().onSuccess {

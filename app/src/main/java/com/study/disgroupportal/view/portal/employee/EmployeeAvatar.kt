@@ -1,7 +1,7 @@
-package com.study.disgroupportal.view.portal
+package com.study.disgroupportal.view.portal.employee
 
-import android.net.Uri
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.ContentScale.Companion.Crop
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import coil.compose.AsyncImage
@@ -24,27 +24,33 @@ import com.study.disgroupportal.view.components.WhiteColor
 fun EmployeeAvatar(
     employee: Employee,
     size: Dp,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null
 ) {
-    when {
-        employee.avatarPath.isNotBlank() -> Uri.parse(employee.avatarPath)
-        employee.avatarUrl.isNotBlank() -> employee.avatarUrl
-        else -> null
-    }?.let { image ->
-        AsyncImage(
-            contentDescription = null,
-            modifier = modifier
-                .size(size)
-                .clip(CircleShape),
-            contentScale = ContentScale.Crop,
-            model = image
-        )
-    } ?: run {
+    employee.avatarPath
+        .ifEmpty { employee.avatarUrl }
+        .ifEmpty { null }
+        ?.let { image ->
+            AsyncImage(
+                contentDescription = null,
+                modifier = modifier
+                    .size(size)
+                    .clip(CircleShape)
+                    .then(other = onClick?.let {
+                        Modifier.clickable { it() }
+                    } ?: Modifier),
+                contentScale = Crop,
+                model = image
+            )
+        } ?: run {
         Box(
             modifier = modifier
                 .size(size)
                 .clip(CircleShape)
-                .background(WhiteColor),
+                .background(WhiteColor)
+                .then(other = onClick?.let {
+                    Modifier.clickable { it() }
+                } ?: Modifier),
             contentAlignment = Alignment.Center
         ) {
             Icon(

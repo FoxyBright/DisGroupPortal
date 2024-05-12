@@ -306,62 +306,59 @@ object Presets {
                 "${randomBody()}-${randomBody()}"
     }
 
-    val employeesPresets: List<Employee>
-        get() {
-            val result = mutableStateListOf<Employee>()
-
-            maleNames.forEachIndexed { i, name ->
-                val employee = Employee(
-                    avatarUrl = "https://randomuser.me/api/portraits/men/$i.jpg",
-                    departament = Departament.entries.random(),
-                    post = postsList.random(),
-                    duties = generateDuties(),
-                    email = generateEmail(),
-                    phone = generatePhone(),
-                    name = name
-                )
-                result.add(employee)
-            }
-
-            femaleNames.forEachIndexed { i, name ->
-                val employee = Employee(
-                    avatarUrl = "https://randomuser.me/api/portraits/women/$i.jpg",
-                    departament = Departament.entries.random(),
-                    duties = generateDuties(),
-                    post = postsList.random(),
-                    email = generateEmail(),
-                    phone = generatePhone(),
-                    name = name,
-                )
-                result.add(employee)
-            }
-
-            // Устанавливаем 10 пользователям данные для входа
-            result.take(10).forEachIndexed { i, user ->
-                result[i] = user.copy(
-                    login = "user$i",
-                    password = "qwerty"
-                )
-            }
-
-            // Добавляем админа
-            result.add(
-                Employee(
-                    avatarUrl = "https://randomuser.me/api/portraits/men/81.jpg",
-                    email = "admin@gmail.com",
-                    name = "Админов Админ Админович",
-                    phone = "89109109090",
-                    password = "qwerty",
-                    login = "admin",
-                    post = "Администратор",
-                    departament = Development_Department,
-                    duties = generateDuties(),
-                    role = ADMIN
-                )
+    val employeesPresets = mutableStateListOf<Employee>().let { result ->
+        maleNames.forEachIndexed { i, name ->
+            val employee = Employee(
+                avatarUrl = "https://randomuser.me/api/portraits/men/$i.jpg",
+                departament = Departament.entries.random(),
+                post = postsList.random(),
+                duties = generateDuties(),
+                email = generateEmail(),
+                phone = generatePhone(),
+                name = name
             )
-
-            result.shuffle()
-
-            return result
+            result.add(employee)
         }
+
+        femaleNames.forEachIndexed { i, name ->
+            val employee = Employee(
+                avatarUrl = "https://randomuser.me/api/portraits/women/$i.jpg",
+                departament = Departament.entries.random(),
+                duties = generateDuties(),
+                post = postsList.random(),
+                email = generateEmail(),
+                phone = generatePhone(),
+                name = name,
+            )
+            result.add(employee)
+        }
+
+        // Устанавливаем 10 пользователям данные для входа
+        result.take(10).forEachIndexed { i, user ->
+            result[i] = user.copy(
+                login = "user$i",
+                password = "qwerty"
+            )
+        }
+
+        // Добавляем админа
+        result.add(
+            Employee(
+                avatarUrl = "https://randomuser.me/api/portraits/men/81.jpg",
+                email = "admin@gmail.com",
+                name = "Админов Админ Админович",
+                phone = "89109109090",
+                password = "qwerty",
+                login = "admin",
+                post = "Администратор",
+                departament = Development_Department,
+                duties = generateDuties(),
+                role = ADMIN
+            )
+        )
+
+        result.shuffle()
+
+        return@let result
+    }
 }

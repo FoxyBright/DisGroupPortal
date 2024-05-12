@@ -6,9 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.study.disgroupportal.data.DataSource
 import com.study.disgroupportal.data.DataSource.clearDb
 import com.study.disgroupportal.data.DataSource.getUser
-import com.study.disgroupportal.data.DataSource.loginInGosuslugi
 import com.study.disgroupportal.data.DataSource.setDbPresets
 import com.study.disgroupportal.model.employee.Employee
 import com.study.disgroupportal.tools.SharedPrefs
@@ -31,12 +31,12 @@ class MainViewModel(
     ) {
         pendingLogin = true
         viewModelScope.launch {
-            loginInGosuslugi(
+            DataSource.login(
                 isAdministrateMode = isAdministrateMode,
                 password = password,
                 login = login
             ).onFailure { onFailure(it) }.onSuccess {
-                prefs.saveToken(it.id.toString())
+                prefs.saveToken(it.id)
                 user = it
                 onSuccess()
             }
@@ -45,8 +45,7 @@ class MainViewModel(
     }
 
     fun updateUser() = viewModelScope.launch {
-        val token = prefs.authToken.toLongOrNull()
-        getUser(token ?: -1L).onSuccess { user = it }
+        getUser(prefs.authToken).onSuccess { user = it }
     }
 
     fun logout() {

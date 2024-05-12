@@ -39,7 +39,7 @@ interface Dao {
     suspend fun getRequests(): List<Request>
 
     @Query("SELECT * FROM requests WHERE authorId = :userId")
-    fun getUserRequests(userId: Long): List<Request>
+    fun getUserRequests(userId: String): List<Request>
 
     @Query("SELECT * FROM requests WHERE id = :requestId")
     suspend fun getRequestById(requestId: Long): List<Request>
@@ -59,7 +59,7 @@ interface Dao {
     /// Сотрудники ///////////////////////////////////////////////
 
     @Query("SELECT * FROM employee")
-    suspend fun getEmployee(): List<Employee>
+    suspend fun getEmployees(): List<Employee>
 
     @Query("DELETE FROM employee")
     suspend fun clearAllEmployees()

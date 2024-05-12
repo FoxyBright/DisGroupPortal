@@ -1,90 +1,63 @@
 package com.study.disgroupportal.view.profile
 
-import androidx.annotation.DrawableRes
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Arrangement.SpaceBetween
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.BasicAlertDialog
-import androidx.compose.material3.ButtonDefaults.buttonColors
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults.cardColors
-import androidx.compose.material3.CardDefaults.cardElevation
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
-import androidx.compose.ui.Alignment.Companion.CenterVertically
-import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
 import androidx.compose.ui.graphics.Color.Companion.Gray
-import androidx.compose.ui.graphics.Color.Companion.LightGray
-import androidx.compose.ui.graphics.Color.Companion.Transparent
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.ContentScale.Companion.Crop
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Medium
-import androidx.compose.ui.text.font.FontWeight.Companion.Normal
-import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import coil.compose.AsyncImage
 import com.study.disgroupportal.BuildConfig.VERSION_NAME
 import com.study.disgroupportal.DisGroupPortalApp.Companion.curScreen
 import com.study.disgroupportal.R
-import com.study.disgroupportal.model.employee.Employee
-import com.study.disgroupportal.model.navigation.Destination.LOGIN
+import com.study.disgroupportal.model.employee.EditEmployType.CONTACTS
+import com.study.disgroupportal.model.employee.EditEmployType.DUTIES
+import com.study.disgroupportal.model.employee.EditEmployType.HEADER
+import com.study.disgroupportal.model.employee.UserRole.ADMIN
 import com.study.disgroupportal.model.navigation.Destination.PROFILE
-import com.study.disgroupportal.tools.Navigation.navigateTo
 import com.study.disgroupportal.tools.getViewModel
 import com.study.disgroupportal.view.components.BlackColor
-import com.study.disgroupportal.view.components.DefaultButton
-import com.study.disgroupportal.view.components.GrayColor
-import com.study.disgroupportal.view.components.RedColor
 import com.study.disgroupportal.view.components.TeaColor
-import com.study.disgroupportal.view.components.WhiteAbsolutelyColor
 import com.study.disgroupportal.view.components.WhiteColor
-import com.study.disgroupportal.viewmodel.EmployeeViewModel
+import com.study.disgroupportal.view.portal.employee.edit.EditEmployeeDialog
 import com.study.disgroupportal.viewmodel.MainViewModel
-import com.study.disgroupportal.viewmodel.NewsViewModel
-import com.study.disgroupportal.viewmodel.RequestsViewModel
 
 @Composable
 fun ProfileScreen(navHostController: NavHostController) {
     val mainVm = getViewModel<MainViewModel>()
 
-    LaunchedEffect(Unit) { curScreen = PROFILE }
+    val currentEmployee = remember(mainVm.user) {
+        mutableStateOf(mainVm.user)
+    }
+
+    LaunchedEffect(Unit, currentEmployee.value) {
+        curScreen = PROFILE
+    }
+    var editDialogType by remember {
+        mutableStateOf(HEADER)
+    }
 
     val showDbSettings = remember {
         mutableStateOf(false)
@@ -94,28 +67,15 @@ fun ProfileScreen(navHostController: NavHostController) {
         mutableStateOf(false)
     }
 
-    Column(Modifier.background(WhiteColor)) {
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(3f)
-                .background(
-                    brush = Brush.verticalGradient(
-                        listOf(TeaColor, BlackColor)
-                    ),
-                    shape = RoundedCornerShape(
-                        bottomEnd = 12.dp,
-                        bottomStart = 12.dp
-                    )
-                )
-        )
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(6f)
-                .background(WhiteColor)
-        )
+    var enableSettings by remember {
+        mutableStateOf(false)
     }
+
+    val showEditDialog = remember {
+        mutableStateOf(false)
+    }
+
+    Background()
 
     Column(
         modifier = Modifier
@@ -126,20 +86,39 @@ fun ProfileScreen(navHostController: NavHostController) {
     ) {
         Spacer(Modifier.height(100.dp))
 
-        HeaderCard(
+        ProfileHeaderCard(
+            onSettingsClick = { enableSettings = !enableSettings },
             onLogoutClick = { showExitDialog.value = true },
-            onSettingsClick = {},
-            user = mainVm.user
+            settingsEnabled = enableSettings,
+            showEditButton = enableSettings,
+            user = currentEmployee.value,
+            onEditClick = {
+                editDialogType = HEADER
+                showEditDialog.value = true
+            }
         )
 
-        if (!mainVm.user?.duties.isNullOrEmpty()) {
+        if (!currentEmployee.value?.duties.isNullOrEmpty()) {
             Spacer(Modifier.height(20.dp))
-            DutyCard(mainVm.user)
+            DutiesCard(
+                showEditButton = currentEmployee.value
+                    ?.role == ADMIN && enableSettings,
+                user = currentEmployee.value
+            ) {
+                editDialogType = DUTIES
+                showEditDialog.value = true
+            }
         }
 
         Spacer(Modifier.height(20.dp))
 
-        Contacts(mainVm.user)
+        ContactsCard(
+            showEditButton = enableSettings,
+            user = currentEmployee.value
+        ) {
+            editDialogType = CONTACTS
+            showEditDialog.value = true
+        }
 
         DbSettingsCard(showDbSettings)
 
@@ -168,335 +147,37 @@ fun ProfileScreen(navHostController: NavHostController) {
         navHostController = navHostController,
         showErrorDialog = showExitDialog
     )
-}
 
-@Composable
-private fun DutyCard(user: Employee?) {
-    Card(
-        colors = cardColors(WhiteAbsolutelyColor),
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        elevation = cardElevation(2.dp)
-    ) {
-        Spacer(Modifier.height(16.dp))
-
-        Text(
-            modifier = Modifier
-                .padding(horizontal = 16.dp),
-            text = "Должностные обязанности:",
-            fontWeight = SemiBold,
-            fontSize = 18.sp,
-            color = GrayColor
-        )
-
-        Spacer(Modifier.height(10.dp))
-
-        user?.duties?.forEachIndexed { i, duty ->
-            DutyRow(duty, i != user.duties.lastIndex)
-        } ?: run {
-            repeat(5) {
-                DutyRow(" ", it != 4)
-            }
-        }
-
-        Spacer(Modifier.height(10.dp))
-    }
-}
-
-@Composable
-private fun DutyRow(
-    text: String,
-    addDivider: Boolean = true
-) {
-    Text(
-        modifier = Modifier.padding(16.dp, 6.dp),
-        fontSize = 16.sp,
-        color = GrayColor,
-        text = text
+    EditEmployeeDialog(
+        showDialog = showEditDialog,
+        dismissRequestAction = {},
+        employee = currentEmployee,
+        type = editDialogType
     )
-
-    if (addDivider) {
-        HorizontalDivider(color = LightGray)
-    }
 }
 
 @Composable
-private fun Contacts(user: Employee?) {
-    Card(
-        colors = cardColors(WhiteAbsolutelyColor),
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        elevation = cardElevation(2.dp)
-    ) {
-        Spacer(Modifier.height(16.dp))
-
-        ContactRow(
-            icon = R.drawable.ic_email,
-            contact = user?.email
-                ?: stringResource(R.string.none)
-        )
-
-        HorizontalDivider(
-            modifier = Modifier.padding(16.dp, 6.dp),
-            color = LightGray
-        )
-
-        ContactRow(
-            icon = R.drawable.ic_phone,
-            contact = user?.phone
-                ?: stringResource(R.string.none)
-        )
-
-        Spacer(Modifier.height(10.dp))
-    }
-}
-
-@Composable
-private fun ContactRow(
-    @DrawableRes
-    icon: Int,
-    contact: String,
-) {
-    Row(
-        verticalAlignment = CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(12.dp)
-    ) {
-        Icon(
-            imageVector = ImageVector
-                .vectorResource(icon),
-            modifier = Modifier.size(24.dp),
-            contentDescription = null,
-            tint = GrayColor,
-        )
-
-        Spacer(Modifier.width(12.dp))
-
-        Text(
-            fontWeight = Medium,
-            color = GrayColor,
-            fontSize = 18.sp,
-            text = contact
-        )
-    }
-}
-
-@Composable
-private fun HeaderCard(
-    user: Employee?,
-    onSettingsClick: () -> Unit,
-    onLogoutClick: () -> Unit,
-) {
-    Box {
-        Card(
-            colors = cardColors(WhiteAbsolutelyColor),
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp),
-            elevation = cardElevation(2.dp)
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 24.dp)
-                    .padding(horizontal = 24.dp),
-                horizontalArrangement = SpaceBetween,
-                verticalAlignment = CenterVertically
-            ) {
-                Icon(
-                    imageVector = ImageVector
-                        .vectorResource(R.drawable.ic_settings),
-                    contentDescription = null,
-                    tint = GrayColor,
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clickable { onSettingsClick() }
-                )
-
-                Icon(
-                    imageVector = ImageVector
-                        .vectorResource(R.drawable.ic_logout),
-                    contentDescription = null,
-                    tint = RedColor,
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clickable { onLogoutClick() }
-                )
-            }
-
-            Spacer(Modifier.height(20.dp))
-
-            Text(
-                modifier = Modifier
-                    .align(CenterHorizontally)
-                    .padding(horizontal = 16.dp),
-                textAlign = TextAlign.Center,
-                text = user?.name ?: " ",
-                fontWeight = Medium,
-                fontSize = 24.sp,
-                color = GrayColor
-            )
-
-            Text(
-                modifier = Modifier
-                    .align(CenterHorizontally)
-                    .padding(horizontal = 16.dp),
-                textAlign = TextAlign.Center,
-                text = user?.email ?: " ",
-                fontSize = 14.sp,
-                color = Gray
-            )
-
-            Spacer(Modifier.height(16.dp))
-        }
-
-        AsyncImage(
+private fun Background() {
+    Column(Modifier.background(WhiteColor)) {
+        Spacer(
             modifier = Modifier
-                .offset(y = (-60).dp)
-                .size(120.dp)
-                .background(WhiteColor, CircleShape)
-                .clip(CircleShape)
-                .align(TopCenter)
-                .border(3.dp, WhiteColor, CircleShape),
-            model = user?.avatarUrl,
-            contentDescription = null,
-            contentScale = Crop
+                .fillMaxWidth()
+                .weight(3f)
+                .background(
+                    brush = verticalGradient(
+                        listOf(TeaColor, BlackColor)
+                    ),
+                    shape = RoundedCornerShape(
+                        bottomEnd = 12.dp,
+                        bottomStart = 12.dp
+                    )
+                )
         )
-    }
-}
-
-@Composable
-private fun DbSettingsCard(
-    showDbSettings: MutableState<Boolean>
-) {
-    val employeeVm = getViewModel<EmployeeViewModel>()
-    val requestsVm = getViewModel<RequestsViewModel>()
-    val mainVm = getViewModel<MainViewModel>()
-    val newsVm = getViewModel<NewsViewModel>()
-
-    Crossfade(
-        targetState = showDbSettings.value,
-        label = "Database control buttons animation"
-    ) { showButtons ->
-        if (showButtons) {
-            Column {
-                Spacer(Modifier.height(20.dp))
-
-                DefaultButton(
-                    text = stringResource(R.string.set_database_presets),
-                    textColor = WhiteColor,
-                    color = BlackColor
-                ) {
-                    mainVm.setDatabasePresets()
-                    employeeVm.uploadEmployees()
-                    requestsVm.uploadRequests(mainVm.user)
-                    newsVm.uploadNews()
-                    showDbSettings.value = false
-                }
-
-                Spacer(Modifier.height(10.dp))
-
-                DefaultButton(
-                    text = stringResource(R.string.clear_database),
-                    textColor = WhiteColor,
-                    color = RedColor
-                ) {
-                    mainVm.clearDatabase()
-                    employeeVm.employees.clear()
-                    newsVm.news.clear()
-                    requestsVm.clearRequests()
-                    requestsVm.clearFilters()
-                    showDbSettings.value = false
-                }
-            }
-        }
-    }
-}
-
-@Composable
-@OptIn(ExperimentalMaterial3Api::class)
-private fun ExitDialog(
-    navHostController: NavHostController,
-    showErrorDialog: MutableState<Boolean>,
-) {
-    val mainVm = getViewModel<MainViewModel>()
-    val newsVm = getViewModel<NewsViewModel>()
-
-    if (showErrorDialog.value) {
-        BasicAlertDialog(
-            onDismissRequest = {
-                showErrorDialog.value = false
-            }
-        ) {
-            Column(
-                modifier = Modifier
-                    .background(WhiteColor, RoundedCornerShape(16.dp))
-                    .padding(16.dp),
-                horizontalAlignment = CenterHorizontally
-            ) {
-                Text(
-                    text = stringResource(R.string.exit_dialog),
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                    fontWeight = SemiBold,
-                    color = GrayColor,
-                    fontSize = 24.sp
-                )
-
-                Spacer(Modifier.height(16.dp))
-
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                    text = stringResource(R.string.exit_agree),
-                    fontWeight = Normal,
-                    fontSize = 16.sp,
-                    color = GrayColor
-                )
-
-                Spacer(Modifier.height(30.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    TextButton(
-                        onClick = { showErrorDialog.value = false },
-                        colors = buttonColors(Transparent),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Text(
-                            text = stringResource(R.string.cancel),
-                            fontWeight = SemiBold,
-                            color = GrayColor,
-                            fontSize = 18.sp
-                        )
-                    }
-
-                    Spacer(Modifier.width(16.dp))
-
-                    TextButton(
-                        onClick = {
-                            showErrorDialog.value = false
-                            navHostController.navigateTo(
-                                dropScreens = true,
-                                dest = LOGIN
-                            )
-                            mainVm.logout()
-                            newsVm.clearNewVm()
-                        },
-                        colors = buttonColors(Transparent),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Text(
-                            fontWeight = SemiBold,
-                            text = stringResource(R.string.ok),
-                            color = GrayColor,
-                            fontSize = 18.sp
-                        )
-                    }
-                }
-            }
-        }
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(6f)
+                .background(WhiteColor)
+        )
     }
 }

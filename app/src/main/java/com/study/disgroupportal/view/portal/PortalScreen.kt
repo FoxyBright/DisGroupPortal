@@ -9,10 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,6 +31,8 @@ import com.study.disgroupportal.model.portal.Division
 import com.study.disgroupportal.model.portal.Tile
 import com.study.disgroupportal.tools.getViewModel
 import com.study.disgroupportal.view.components.WhiteColor
+import com.study.disgroupportal.view.portal.employee.EmployeeInfoScreen
+import com.study.disgroupportal.view.portal.employee.EmployeeItem
 import com.study.disgroupportal.viewmodel.EmployeeViewModel
 
 private const val defaultTitle = "Корпоративный портал"
@@ -59,8 +59,6 @@ fun PortalScreen() {
     val selectedDepartament = remember {
         mutableStateOf<Departament?>(null)
     }
-
-    val listState = rememberLazyListState()
 
     fun onBackClick() {
         selectedEmployee.value
@@ -104,7 +102,6 @@ fun PortalScreen() {
             employee = selectedEmployee,
             departament = selectedDepartament,
             division = selectedDivision,
-            listState = listState,
             title = title
         )
     }
@@ -118,7 +115,6 @@ private fun Content(
     division: MutableState<Division?>,
     title: MutableState<String>,
     modifier: Modifier = Modifier,
-    listState: LazyListState
 ) {
     val employeeVm = getViewModel<EmployeeViewModel>()
     LaunchedEffect(Unit) { employeeVm.uploadEmployees() }
@@ -126,26 +122,19 @@ private fun Content(
     LaunchedEffect(division.value, departament.value, employee.value) {
         title.value = when {
             employee.value != null -> buildString {
-                val user = employee.value!!
-                val dep = user.departament
-                append(dep?.division?.title ?: "")
+                val dep = employee.value
+                    ?.departament ?: return@buildString
+                append(dep.division.title)
                 append("\n")
-                append(dep?.title ?: "")
-                append("\n")
-                append(user.name)
+                append(dep.title)
             }
 
-            departament.value != null -> run {
-                if (division.value == null) {
-                    return@run departament.value?.title ?: ""
-                }
-                val depTitle = departament.value?.title ?: ""
-                val divTitle = division.value?.title ?: ""
-                buildString {
-                    append(divTitle)
-                    append("\n")
-                    append(depTitle)
-                }
+            departament.value != null -> buildString {
+                val dep = departament.value
+                    ?: return@buildString
+                append(dep.division.title)
+                append("\n")
+                append(dep.title)
             }
 
             division.value != null -> division.value?.title ?: ""
@@ -191,10 +180,7 @@ private fun Content(
         mutableStateOf(show)
     }
 
-    LazyColumn(
-        modifier = modifier.fillMaxSize(),
-        state = listState
-    ) {
+    LazyColumn(modifier.fillMaxSize()) {
         when {
             employee.value != null -> item {
                 EmployeeInfoScreen(employee.value!!)

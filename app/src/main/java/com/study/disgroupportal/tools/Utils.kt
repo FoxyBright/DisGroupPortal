@@ -9,6 +9,8 @@ import android.net.Uri
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.TIRAMISU
 import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+import android.widget.Toast
+import android.widget.Toast.LENGTH_SHORT
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.compose.runtime.Composable
@@ -21,10 +23,10 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.MultiplePermissionsState
 
 @Composable
-inline fun <reified T: AndroidViewModel> getViewModel() =
+inline fun <reified T : AndroidViewModel> getViewModel() =
     viewModel<T>(LocalContext.current as ComponentActivity)
 
-inline fun <reified T: AndroidViewModel> ViewModelStoreOwner.getViewModel() =
+inline fun <reified T : AndroidViewModel> ViewModelStoreOwner.getViewModel() =
     ViewModelProvider(this)[T::class.java]
 
 val neededStoragePermissions
@@ -58,4 +60,8 @@ fun MultiplePermissionsState.openGallery(
 
         else -> launchMultiplePermissionRequest()
     }
+}
+
+fun Context.showToast(text: String) {
+    Toast.makeText(this, text, LENGTH_SHORT).show()
 }

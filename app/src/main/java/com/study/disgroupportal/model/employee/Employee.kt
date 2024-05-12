@@ -1,19 +1,21 @@
 package com.study.disgroupportal.model.employee
 
+import android.graphics.Bitmap
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import com.study.disgroupportal.model.employee.UserRole.USER
 import com.study.disgroupportal.model.portal.Departament
-import java.util.stream.Collectors
+import java.util.UUID
+import java.util.stream.Collectors.joining
 
 
 @Entity(tableName = "employee")
-@TypeConverters(ListConverter::class)
+@TypeConverters(Converter::class)
 data class Employee(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0L,
+    @PrimaryKey(autoGenerate = false)
+    val id: String = UUID.randomUUID().toString(),
     val departament: Departament? = null,
     val avatarUrl: String = "",
     val name: String = "",
@@ -27,15 +29,14 @@ data class Employee(
     val phone: String = ""
 )
 
-class ListConverter {
+class Converter {
     @TypeConverter
-    fun fromHobbies(hobbies: List<String>): String {
-        return hobbies.stream().collect(Collectors.joining(","))
-    }
+    fun fromDuties(duties: List<String>): String = duties
+        .stream().collect(joining(","))
 
     @TypeConverter
-    fun toHobbies(data: String): List<String> {
-        return listOf(*data.split(",".toRegex()).dropLastWhile { it.isEmpty() }
+    fun toDuties(data: String) = listOf(
+        *data.split(",".toRegex())
+            .dropLastWhile { it.isEmpty() }
             .toTypedArray())
-    }
 }

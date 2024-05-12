@@ -1,4 +1,4 @@
-package com.study.disgroupportal.view.portal
+package com.study.disgroupportal.view.portal.employee
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize.Max
@@ -42,7 +42,7 @@ fun EmployeeItem(
                 .fillMaxWidth()
                 .padding(10.dp)
         ) {
-            EmployeeAvatar(employee, 80.dp)
+            EmployeeAvatar(employee, size = 80.dp)
 
             Spacer(Modifier.width(8.dp))
 

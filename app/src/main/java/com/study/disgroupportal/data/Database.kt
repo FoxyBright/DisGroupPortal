@@ -9,11 +9,8 @@ import com.study.disgroupportal.model.requests.Request
 import com.study.disgroupportal.model.employee.Employee
 
 @Database(
-    entities = [
-        New::class,
-        Request::class,
-        Employee::class],
-    version = 11
+    entities = [New::class, Request::class, Employee::class],
+    version = 15
 )
 abstract class AppDatabase : RoomDatabase() {
 
