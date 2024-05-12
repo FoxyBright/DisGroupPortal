@@ -15,7 +15,6 @@ import androidx.compose.ui.text.font.FontWeight.Companion.Medium
 import androidx.compose.ui.text.style.TextAlign.Companion.Center
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.study.disgroupportal.ui.theme.PrimaryColor
 
 @Composable
 fun DefaultButton(

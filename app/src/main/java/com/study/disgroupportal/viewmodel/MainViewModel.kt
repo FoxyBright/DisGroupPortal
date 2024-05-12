@@ -45,8 +45,6 @@ class MainViewModel(
     var refreshNews by mutableStateOf(false)
 
     val employees = mutableStateListOf<Employee>()
-    var pendingEmployees by mutableStateOf(false)
-    var refreshEmployees by mutableStateOf(false)
 
     val searchText = mutableStateOf("")
 
@@ -122,8 +120,8 @@ class MainViewModel(
 
     fun updateUser() {
         viewModelScope.launch {
-            getUser(prefs.authToken.toLong())
-                .onSuccess { user = it }
+            val token = prefs.authToken.toLongOrNull()
+            getUser(token ?: -1L).onSuccess { user = it }
         }
     }
 
@@ -221,15 +219,11 @@ class MainViewModel(
     }
 
     fun uploadEmployees() {
-
-        pendingEmployees = true
         viewModelScope.launch {
             getAllEmployees().onSuccess {
                 employees.clear()
                 employees.addAll(it)
             }
-            pendingEmployees = false
-            refreshEmployees = false
         }
     }
 }

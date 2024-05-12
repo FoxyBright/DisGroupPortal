@@ -6,19 +6,24 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize.Max
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults.cardColors
 import androidx.compose.material3.CardDefaults.cardElevation
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Alignment.Companion.TopStart
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
@@ -26,12 +31,14 @@ import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight.Companion.Medium
 import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
 import androidx.compose.ui.text.input.KeyboardCapitalization.Companion.Sentences
 import androidx.compose.ui.text.input.KeyboardType.Companion.Text
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.study.disgroupportal.R
@@ -45,13 +52,16 @@ import com.study.disgroupportal.viewmodel.MainViewModel
 @Composable
 fun PortalTopBar(
     focus: MutableState<Boolean>,
+    showSearch: Boolean,
     title: String,
+    showBackButton: Boolean = false,
+    onBackClick: () -> Unit = {}
 ) {
     val mainVm = getViewModel<MainViewModel>()
 
     Column {
         Box(
-            Modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .background(
                     brush = Brush.verticalGradient(
@@ -59,9 +69,26 @@ fun PortalTopBar(
                     )
                 )
                 .padding(16.dp, 20.dp),
-            Alignment.Center
+            contentAlignment = Center
         ) {
+            if (showBackButton) {
+                IconButton(
+                    onClick = onBackClick,
+                    modifier = Modifier
+                        .align(TopStart)
+                        .size(24.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_back_arrow),
+                        modifier = Modifier.fillMaxSize(),
+                        contentDescription = null,
+                        tint = White
+                    )
+                }
+            }
+
             Text(
+                textAlign = TextAlign.Center,
                 fontWeight = SemiBold,
                 fontSize = 20.sp,
                 color = White,
@@ -69,17 +96,19 @@ fun PortalTopBar(
             )
         }
 
-        Spacer(Modifier.height(12.dp))
+        if (showSearch) {
+            Spacer(Modifier.height(12.dp))
 
-        SearchRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            value = mainVm.searchText,
-            focus = focus
-        )
+            SearchRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                value = mainVm.searchText,
+                focus = focus
+            )
 
-        Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(12.dp))
+        }
     }
 }
 

@@ -61,9 +61,6 @@ interface Dao {
     @Query("SELECT * FROM employee")
     suspend fun getEmployee(): List<Employee>
 
-    @Query("SELECT * FROM employee WHERE id = :employeeId")
-    suspend fun getEmployeeById(employeeId: Long): List<Employee>
-
     @Query("DELETE FROM employee")
     suspend fun clearAllEmployees()
 

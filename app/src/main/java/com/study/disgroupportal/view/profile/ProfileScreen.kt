@@ -129,9 +129,10 @@ fun ProfileScreen(navHostController: NavHostController) {
             user = mainVm.user
         )
 
-        Spacer(Modifier.height(20.dp))
-
-        DutyCard(mainVm.user)
+        if (!mainVm.user?.duties.isNullOrEmpty()) {
+            Spacer(Modifier.height(20.dp))
+            DutyCard(mainVm.user)
+        }
 
         Spacer(Modifier.height(20.dp))
 
@@ -187,15 +188,13 @@ private fun DutyCard(user: Employee?) {
 
         Spacer(Modifier.height(10.dp))
 
-//        val userDuties = remember(user) {
-//            (user?.duty?.list() ?: emptyList()).toMutableStateList()
-//        }
-//
-//        if (userDuties.isNotEmpty()) userDuties.forEachIndexed { i, duty ->
-//            DutyRow(duty, i != userDuties.lastIndex)
-//        } else repeat(5) {
-//            DutyRow(" ", it != 4)
-//        }
+        user?.duties?.forEachIndexed { i, duty ->
+            DutyRow(duty, i != user.duties.lastIndex)
+        } ?: run {
+            repeat(5) {
+                DutyRow(" ", it != 4)
+            }
+        }
 
         Spacer(Modifier.height(10.dp))
     }
@@ -328,6 +327,7 @@ private fun HeaderCard(
                 modifier = Modifier
                     .align(CenterHorizontally)
                     .padding(horizontal = 16.dp),
+                textAlign = TextAlign.Center,
                 text = user?.name ?: " ",
                 fontWeight = Medium,
                 fontSize = 24.sp,
@@ -338,6 +338,7 @@ private fun HeaderCard(
                 modifier = Modifier
                     .align(CenterHorizontally)
                     .padding(horizontal = 16.dp),
+                textAlign = TextAlign.Center,
                 text = user?.email ?: " ",
                 fontSize = 14.sp,
                 color = Gray

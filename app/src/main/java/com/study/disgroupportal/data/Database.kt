@@ -13,7 +13,7 @@ import com.study.disgroupportal.model.employee.Employee
         New::class,
         Request::class,
         Employee::class],
-    version = 8
+    version = 11
 )
 abstract class AppDatabase : RoomDatabase() {
 

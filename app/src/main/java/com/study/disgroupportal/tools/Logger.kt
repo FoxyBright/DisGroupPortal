@@ -31,9 +31,3 @@ fun <T> T.logE(
     label: String = DEFAULT_LABEL,
     throwable: Throwable? = null,
 ) = log(E, tag, label, throwable)
-
-fun <T> T.logI(
-    tag: String = DEFAULT_TAG,
-    label: String = DEFAULT_LABEL,
-    throwable: Throwable? = null,
-) = log(I, tag, label, throwable)

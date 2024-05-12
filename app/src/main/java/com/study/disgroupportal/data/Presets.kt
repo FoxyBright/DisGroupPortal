@@ -1,15 +1,17 @@
 package com.study.disgroupportal.data
 
 import android.text.format.DateUtils.WEEK_IN_MILLIS
+import androidx.compose.runtime.mutableStateListOf
 import com.study.disgroupportal.DisGroupPortalApp.Companion.curTime
+import com.study.disgroupportal.model.employee.Employee
+import com.study.disgroupportal.model.employee.UserRole.ADMIN
 import com.study.disgroupportal.model.news.New
 import com.study.disgroupportal.model.portal.Departament
 import com.study.disgroupportal.model.portal.Departament.Development_Department
 import com.study.disgroupportal.model.requests.Request
 import com.study.disgroupportal.model.requests.RequestStatus.OPENED
 import com.study.disgroupportal.model.requests.RequestTheme.ARRANGEMENT
-import com.study.disgroupportal.model.employee.Employee
-import com.study.disgroupportal.model.employee.UserRole.ADMIN
+import kotlin.random.Random
 import kotlin.random.Random.Default.nextLong
 
 object Presets {
@@ -128,79 +130,238 @@ object Presets {
         )
     )
 
-    val employeesPresets = listOf(
-        Employee(
-            avatarUrl = "https://randomuser.me/api/portraits/men/81.jpg",
-            email = "ivan@gmail.com",
-            name = "Иван Админович",
-            phone = "89109109090",
-            password = "qwerty",
-            login = "ivan",
-            post = "Администратор",
-            departament = Development_Department,
-            role = ADMIN,
-//            duty = Duty(
-//                dutyOne = "Обеспечение безопасности",
-//                dutyTwo = "Контроль совместимости",
-//                dutyThree = "Руководство персоналом",
-//                dutyFour = "Контроль взаимодействия с заказчиком",
-//                dutyFive = "Управление администраторской панелью приложения",
-//            )
-        ),
-
-        Employee(
-            avatarUrl = "https://upload.wikimedia.org/wikipedia/commons/2/2a/%D0%9C%D0%B8%D1%85%D0%B0%D0%B8%D0%BB_%D0%9C%D0%B8%D1%88%D1%83%D1%81%D1%82%D0%B8%D0%BD_%2830-03-2022%29_%28cropped%29.jpg",
-            name = "Михаил Владимирович Мишустин",
-            post = "Председатель Правительства Российской Федерации",
-            departament = Departament.entries.random(),
-        ),
-        Employee(
-            avatarUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Vladimir_Kolokoltsev_%282020-02-21%29.jpg/656px-Vladimir_Kolokoltsev_%282020-02-21%29.jpg?20200221142310",
-            name = "Владимир Александрович Колокольцев",
-            post = "Министр внутренних дел Российской Федерации",
-            departament = Departament.entries.random(),
-        ),
-        Employee(
-            avatarUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/%D0%A1%D0%B5%D1%80%D0%B3%D0%B5%D0%B9_%D0%9B%D0%B0%D0%B2%D1%80%D0%BE%D0%B2_%2818-11-2022%29_%28cropped%29.jpg/375px-%D0%A1%D0%B5%D1%80%D0%B3%D0%B5%D0%B9_%D0%9B%D0%B0%D0%B2%D1%80%D0%BE%D0%B2_%2818-11-2022%29_%28cropped%29.jpg",
-            name = "Сергей Викторович Лавров",
-            post = "Министр иностранных дел Российской Федерации",
-            departament = Departament.entries.random(),
-        ),
-        Employee(
-            avatarUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Sergey_Kravtsov_12.03.2020.jpg/375px-Sergey_Kravtsov_12.03.2020.jpg",
-            name = "Сергей Сергеевич Кравцов",
-            post = "Министр просвещения Российской Федерации",
-            departament = Departament.entries.random(),
-        ),
-        Employee(
-            avatarUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Olga_Liubimova_%282020-12-07%29.jpg/300px-Olga_Liubimova_%282020-12-07%29.jpg",
-            name = "Ольга Борисовна Любимова",
-            post = "Министр культуры Российской Федерации",
-            departament = Departament.entries.random(),
-        ),
-        Employee(
-            avatarUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Mikhail_Murashko_%282020-01-29%29.jpg/411px-Mikhail_Murashko_%282020-01-29%29.jpg",
-            name = "Михаил Альбертович Мурашко",
-            post = "Министр здравоохранения Российской Федерации",
-            departament = Departament.entries.random(),
-        ),
-        Employee(
-            avatarUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Anton_Siluanov_%282019-09-25%29.jpg/315px-Anton_Siluanov_%282019-09-25%29.jpg",
-            name = "Антон Германович Силуанов",
-            post = "Министр финансов Российской Федерации",
-            departament = Departament.entries.random(),
-        ),
-        Employee(
-            avatarUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Official_portrait_of_Sergey_Shoigu.jpg/345px-Official_portrait_of_Sergey_Shoigu.jpg",
-            name = "Сергей Кужугетович Шойгу",
-            post = "Министр обороны Российской Федерации",
-            departament = Departament.entries.random(),
-        ),
-        Employee(
-            avatarUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Konstantin_Chuychenko_official_portrait.png/300px-Konstantin_Chuychenko_official_portrait.png",
-            name = "Константин Анатольевич Чуйченко",
-            post = "Министр юстиции Российской Федерации",
-            departament = Departament.entries.random(),
-        )
+    private val maleNames = listOf(
+        "Мартынов Евгений Даниилович",
+        "Блинов Александр Тихонович",
+        "Калинин Юрий Даниилович",
+        "Поздняков Даниил Андреевич",
+        "Комаров Егор Денисович",
+        "Иванов Пётр Максимович",
+        "Козлов Роман Даниилович",
+        "Романов Андрей Павлович",
+        "Столяров Эмиль Олегович",
+        "Орлов Павел Миронович",
+        "Тихомиров Сергей Максимович",
+        "Щукин Тимофей Владиславович",
+        "Севастьянов Тимофей Кириллович",
+        "Петров Ярослав Тимурович",
+        "Шубин Кирилл Максимович",
+        "Орлов Лев Тимурович",
+        "Прокофьев Владимир Львович",
+        "Масленников Николай Андреевич",
+        "Смирнов Вадим Даниилович",
+        "Иванов Матвей Александрович",
+        "Карпов Роман Макарович",
+        "Плотников Степан Давидович",
+        "Морозов Матвей Михайлович",
+        "Трофимов Тимур Матвеевич",
+        "Николаев Максим Александрович",
+        "Попов Андрей Фёдорович",
+        "Беляев Давид Миронович",
+        "Сурков Владислав Дмитриевич",
+        "Ерофеев Никита Максимович",
+        "Тимофеев Максим Максимович",
+        "Щербаков Матвей Ильич",
+        "Виноградов Дмитрий Маркович",
+        "Федотов Михаил Даниэльевич",
+        "Борисов Ибрагим Ильич",
+        "Новиков Николай Даниэльевич",
+        "Николаев Илья Русланович",
+        "Николаев Платон Всеволодович",
+        "Ковалев Михаил Васильевич",
+        "Новиков Иван Максимович",
+        "Смирнов Василий Дмитриевич",
+        "Лебедев Максим Александрович",
+        "Носов Григорий Ильич",
+        "Барсуков Мирон Степанович",
+        "Андрианов Максим Степанович",
+        "Зверев Павел Семёнович",
+        "Аксенов Марк Николаевич",
+        "Акимов Лев Максимович",
+        "Андреев Иван Анатольевич",
+        "Федоров Иван Львович",
+        "Новиков Максим Алексеевич"
     )
+
+    private val femaleNames = listOf(
+        "Сергеева Виктория Тихоновна",
+        "Гусева Есения Руслановна",
+        "Хромова Алёна Львовна",
+        "Зайцева Ольга Глебовна",
+        "Горбачева София Александровна",
+        "Сорокина Оливия Степановна",
+        "Анисимова Александра Никитична",
+        "Еремеева Елизавета Кирилловна",
+        "Сидорова Ангелина Семёновна",
+        "Симонова Полина Данииловна",
+        "Лазарева Вера Григорьевна",
+        "Завьялова Анастасия Владиславовна",
+        "Черная Анна Романовна",
+        "Смирнова Алёна Владиславовна",
+        "Басова Ева Константиновна",
+        "Андреева Василиса Кирилловна",
+        "Шубина Анастасия Михайловна",
+        "Серова Маргарита Максимовна",
+        "Ермакова София Егоровна",
+        "Боброва Алёна Максимовна",
+        "Климова Ирина Артёмовна",
+        "Осипова Анастасия Дмитриевна",
+        "Анисимова София Ивановна",
+        "Смирнова Александра Михайловна",
+        "Кулакова Яна Данииловна",
+        "Коновалова Кристина Алексеевна",
+        "Евсеева Анастасия Фёдоровна",
+        "Кулешова Ангелина Александровна",
+        "Маркова Яна Михайловна",
+        "Калинина Эвелина Всеволодовна",
+        "Чеснокова Мария Тихоновна",
+        "Голубева Елизавета Романовна",
+        "Зайцева Мария Мироновна",
+        "Васильева Юлия Александровна",
+        "Николаева Айлин Захаровна",
+        "Комарова Ирина Тимуровна",
+        "Тимофеева Кира Фёдоровна",
+        "Киселева Карина Егоровна",
+        "Фомина Полина Александровна",
+        "Колосова Валерия Львовна",
+        "Филатова Теона Арсентьевна",
+        "Жукова Милана Дмитриевна",
+        "Царева Виктория Артёмовна",
+        "Вавилова Ангелина Мироновна",
+        "Громова София Александровна",
+        "Федотова Амина Михайловна",
+        "Костина Варвара Викторовна",
+        "Селезнева Валерия Данииловна",
+        "Волкова Александра Леонидовна",
+        "Пономарева Виктория Михайловна"
+    )
+
+    private val postsList = listOf(
+        "Веб-разработчик",
+        "Дефектолог",
+        "Финансовый консультант",
+        "Менеджер по маркетингу",
+        "Исполнительный помощник",
+        "Кредитный инспектор",
+        "Системный аналитик",
+        "Регистратор",
+        "Системный архитектор",
+        "Бухгалтер",
+        "Главный инженер",
+        "Специалист по компьютерной поддержке",
+        "Арт-директор",
+        "Оценщик стоимости",
+        "Специалист по связям с клиентом",
+        "Аналитик по исследованию рынка",
+        "Главный технолог",
+    )
+
+    private fun generateDuties(count: Int = 5) = Array(count) {
+        dutiesList.random()
+    }.toList()
+
+    private val dutiesList = listOf(
+        "Обеспечение безопасности",
+        "Контроль совместимости",
+        "Руководство персоналом",
+        "Контроль взаимодействия с заказчиком",
+        "Обслуживание компьютерного оборудования",
+        "Разработка и поддержка систем и сетей",
+        "Обеспечение безопасности данных",
+        "Защита от внешних угроз",
+        "Решение проблем и устранение сбоев",
+        "Консультирование пользователей",
+        "Обучение персонала",
+        "Ведение бухгалтерии",
+        "Управление менеджментом",
+        "Управление предпринимательской деятельностью",
+        "Управление коммерческой деятельностью",
+        "Планирование деятельности",
+        "Планирование деятельности стратегических целей",
+        "Контроль за разработкой",
+        "Контроль за реализацией бизнес-планов",
+        "Контроль соблюдения коммерческих условий",
+        "Контроль за разработкой",
+        "Анализ и решение организационно-технических проблем"
+    )
+
+    private fun generateEmail(): String {
+        var email = ""
+        repeat(Random.nextInt(10, 15)) {
+            email += "1234567890qwertyuiopasdfghjklzxcvbnm".random()
+        }
+        val mail = when (Random.nextInt(0, 2)) {
+            0 -> "yandex.ru"
+            1 -> "gmail.com"
+            else -> "mail.ru"
+        }
+        email += "@$mail"
+        return email
+    }
+
+    private fun generatePhone(): String {
+        fun randomCode() = Random.nextInt(100, 999)
+        fun randomBody() = Random.nextInt(10, 99)
+        return "+7 (${randomCode()}) ${randomCode()}-" +
+                "${randomBody()}-${randomBody()}"
+    }
+
+    val employeesPresets: List<Employee>
+        get() {
+            val result = mutableStateListOf<Employee>()
+
+            maleNames.forEachIndexed { i, name ->
+                val employee = Employee(
+                    avatarUrl = "https://randomuser.me/api/portraits/men/$i.jpg",
+                    departament = Departament.entries.random(),
+                    post = postsList.random(),
+                    duties = generateDuties(),
+                    email = generateEmail(),
+                    phone = generatePhone(),
+                    name = name
+                )
+                result.add(employee)
+            }
+
+            femaleNames.forEachIndexed { i, name ->
+                val employee = Employee(
+                    avatarUrl = "https://randomuser.me/api/portraits/women/$i.jpg",
+                    departament = Departament.entries.random(),
+                    duties = generateDuties(),
+                    post = postsList.random(),
+                    email = generateEmail(),
+                    phone = generatePhone(),
+                    name = name,
+                )
+                result.add(employee)
+            }
+
+            // Устанавливаем 10 пользователям данные для входа
+            result.take(10).forEachIndexed { i, user ->
+                result[i] = user.copy(
+                    login = "user$i",
+                    password = "qwerty"
+                )
+            }
+
+            // Добавляем админа
+            result.add(
+                Employee(
+                    avatarUrl = "https://randomuser.me/api/portraits/men/81.jpg",
+                    email = "admin@gmail.com",
+                    name = "Админов Админ Админович",
+                    phone = "89109109090",
+                    password = "qwerty",
+                    login = "admin",
+                    post = "Администратор",
+                    departament = Development_Department,
+                    duties = generateDuties(),
+                    role = ADMIN
+                )
+            )
+
+            result.shuffle()
+
+            return result
+        }
 }
