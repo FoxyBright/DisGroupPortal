@@ -56,12 +56,20 @@ class RequestsViewModel(
         }
     }
 
+    fun clearVm() {
+        clearRequests()
+        clearFilters()
+        firstUploadRequests = false
+        refreshRequests = false
+        pendingRequests = false
+    }
+
     fun clearFilters() {
         _requestThemeFilters.value = emptyList()
         _requestStatusFilters.value = emptyList()
     }
 
-    fun clearRequests(){
+    fun clearRequests() {
         _requests.value = emptyList()
     }
 

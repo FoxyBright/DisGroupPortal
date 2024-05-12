@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale.Companion.Crop
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import coil.compose.AsyncImage
@@ -40,7 +41,10 @@ fun EmployeeAvatar(
                         Modifier.clickable { it() }
                     } ?: Modifier),
                 contentScale = Crop,
-                model = image
+                model = image,
+                placeholder = painterResource(
+                    R.drawable.profile_placeholder
+                )
             )
         } ?: run {
         Box(

@@ -1,5 +1,7 @@
 package com.study.disgroupportal.view.portal.employee
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement.SpaceBetween
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults.cardColors
@@ -29,27 +32,37 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.study.disgroupportal.R
 import com.study.disgroupportal.model.employee.EditEmployType.CONTACTS
+import com.study.disgroupportal.model.employee.EditEmployType.DEPARTAMENT
 import com.study.disgroupportal.model.employee.EditEmployType.DUTIES
 import com.study.disgroupportal.model.employee.EditEmployType.HEADER
 import com.study.disgroupportal.model.employee.Employee
 import com.study.disgroupportal.model.employee.UserRole.ADMIN
 import com.study.disgroupportal.tools.getViewModel
 import com.study.disgroupportal.view.components.BlackColor
+import com.study.disgroupportal.view.components.CyanColor
 import com.study.disgroupportal.view.components.DefaultButton
 import com.study.disgroupportal.view.components.GrayColor
+import com.study.disgroupportal.view.components.RedColor
 import com.study.disgroupportal.view.components.WhiteAbsolutelyColor
 import com.study.disgroupportal.view.components.WhiteColor
 import com.study.disgroupportal.view.portal.employee.edit.EditEmployeeDialog
 import com.study.disgroupportal.view.profile.ContactsCard
+import com.study.disgroupportal.view.profile.DepartamentCard
 import com.study.disgroupportal.view.profile.DutiesCard
+import com.study.disgroupportal.viewmodel.EmployeeViewModel
 import com.study.disgroupportal.viewmodel.MainViewModel
 
 @Composable
-fun EmployeeInfoScreen(employee: Employee) {
+fun EmployeeInfoScreen(
+    isAdd: Boolean = false,
+    employee: Employee?,
+    onBack: () -> Unit
+) {
     val mainVm = getViewModel<MainViewModel>()
+    val employeeVm = getViewModel<EmployeeViewModel>()
 
-    val currentEmployee = remember(employee) {
-        mutableStateOf<Employee?>(employee)
+    var currentEmployee by remember(employee, isAdd) {
+        mutableStateOf(if (isAdd) Employee() else employee)
     }
 
     val showEditDialog = remember {
@@ -80,8 +93,14 @@ fun EmployeeInfoScreen(employee: Employee) {
                 horizontalArrangement = SpaceBetween,
                 verticalAlignment = CenterVertically
             ) {
-                currentEmployee.value?.let {user->
-                    EmployeeAvatar(user, size = 120.dp)
+                currentEmployee?.let { user ->
+                    EmployeeAvatar(
+                        modifier = Modifier
+                            .background(WhiteColor, CircleShape)
+                            .border(3.dp, BlackColor, CircleShape),
+                        employee = user,
+                        size = 120.dp
+                    )
                 }
 
                 Spacer(Modifier.width(12.dp))
@@ -89,7 +108,7 @@ fun EmployeeInfoScreen(employee: Employee) {
                 Column(Modifier.weight(1f)) {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = currentEmployee.value?.name ?: "",
+                        text = currentEmployee?.name ?: "",
                         fontWeight = Medium,
                         color = GrayColor,
                         fontSize = 20.sp,
@@ -100,7 +119,7 @@ fun EmployeeInfoScreen(employee: Employee) {
 
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = currentEmployee.value?.post ?: "",
+                        text = currentEmployee?.post ?: "",
                         fontSize = 14.sp,
                         textAlign = End,
                         color = Gray
@@ -125,12 +144,24 @@ fun EmployeeInfoScreen(employee: Employee) {
             }
         }
 
-        if (!currentEmployee.value?.duties.isNullOrEmpty()) {
+        Spacer(Modifier.height(20.dp))
+
+        DepartamentCard(
+            departament = currentEmployee?.departament,
+            showEditButton = mainVm.user?.role == ADMIN
+        ) {
+            editDialogType = DEPARTAMENT
+            showEditDialog.value = true
+        }
+
+        if (mainVm.user?.role == ADMIN ||
+            !currentEmployee?.duties.isNullOrEmpty()
+        ) {
             Spacer(Modifier.height(20.dp))
 
             DutiesCard(
                 showEditButton = mainVm.user?.role == ADMIN,
-                user = currentEmployee.value
+                user = currentEmployee
             ) {
                 editDialogType = DUTIES
                 showEditDialog.value = true
@@ -141,10 +172,32 @@ fun EmployeeInfoScreen(employee: Employee) {
 
         ContactsCard(
             showEditButton = mainVm.user?.role == ADMIN,
-            user = currentEmployee.value
+            user = currentEmployee
         ) {
             editDialogType = CONTACTS
             showEditDialog.value = true
+        }
+
+        if (mainVm.user?.role == ADMIN) {
+            Spacer(Modifier.height(20.dp))
+
+            DefaultButton(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                text = stringResource(
+                    if (isAdd) R.string.add else R.string.delete_employee
+                ),
+                textColor = WhiteColor,
+                color = if (isAdd) CyanColor else RedColor
+            ) {
+                currentEmployee?.let {
+                    if (isAdd) {
+                        employeeVm.addEmployee(it)
+                    } else {
+                        employeeVm.deleteEmployee(it)
+                    }
+                }
+                onBack()
+            }
         }
 
         Spacer(Modifier.height(20.dp))
@@ -155,5 +208,8 @@ fun EmployeeInfoScreen(employee: Employee) {
         employee = currentEmployee,
         dismissRequestAction = {},
         type = editDialogType
-    )
+    ) { newData ->
+        employeeVm.editEmployee(newData)
+        currentEmployee = newData
+    }
 }

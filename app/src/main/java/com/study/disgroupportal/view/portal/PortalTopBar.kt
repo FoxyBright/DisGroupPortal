@@ -62,7 +62,6 @@ import com.study.disgroupportal.viewmodel.EmployeeViewModel
 @Composable
 fun PortalTopBar(
     focus: MutableState<Boolean>,
-    showSearch: Boolean,
     title: String,
     showBackButton: Boolean = false,
     onBackClick: () -> Unit = {}
@@ -106,7 +105,9 @@ fun PortalTopBar(
             )
         }
 
-        if (showSearch) {
+        if (employeeVm.selectedEmployee == null
+            && !employeeVm.isAddEmployee
+        ) {
             Spacer(Modifier.height(12.dp))
 
             SearchRow(

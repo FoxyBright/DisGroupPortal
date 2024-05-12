@@ -12,27 +12,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.study.disgroupportal.model.employee.EditEmployType
 import com.study.disgroupportal.model.employee.EditEmployType.CONTACTS
+import com.study.disgroupportal.model.employee.EditEmployType.DEPARTAMENT
 import com.study.disgroupportal.model.employee.EditEmployType.DUTIES
 import com.study.disgroupportal.model.employee.EditEmployType.HEADER
 import com.study.disgroupportal.model.employee.Employee
 import com.study.disgroupportal.model.employee.UserRole.ADMIN
 import com.study.disgroupportal.tools.getViewModel
 import com.study.disgroupportal.view.components.WhiteAbsolutelyColor
-import com.study.disgroupportal.viewmodel.EmployeeViewModel
 import com.study.disgroupportal.viewmodel.MainViewModel
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun EditEmployeeDialog(
-    employee: MutableState<Employee?>,
+    employee: Employee?,
     showDialog: MutableState<Boolean>,
     modifier: Modifier = Modifier,
     type: EditEmployType,
-    dismissRequestAction: () -> Unit = {}
+    dismissRequestAction: () -> Unit = {},
+    onSave: (Employee) -> Unit = {},
 ) {
-    if (employee.value == null) return
-
-    val employeeVm = getViewModel<EmployeeViewModel>()
     val mainVm = getViewModel<MainViewModel>()
 
     if (showDialog.value) {
@@ -51,33 +49,35 @@ fun EditEmployeeDialog(
                 when (type) {
                     CONTACTS -> EditEmployeeContactsDialog(
                         onCancelClick = { showDialog.value = false },
-                        employee = employee.value!!
+                        employee = employee ?: Employee()
                     ) { newData ->
-                        employeeVm.editEmployee(newData)
-                        employee.value = newData
                         showDialog.value = false
-                        mainVm.updateUser()
+                        onSave(newData)
                     }
 
                     DUTIES -> EditEmployeeDutiesDialogs(
                         onCancelClick = { showDialog.value = false },
-                        employee = employee.value!!
+                        employee = employee ?: Employee()
                     ) { newData ->
-                        employeeVm.editEmployee(newData)
-                        employee.value = newData
                         showDialog.value = false
-                        mainVm.updateUser()
+                        onSave(newData)
                     }
 
                     HEADER -> EditHeaderDialog(
                         onCancelClick = { showDialog.value = false },
                         isAdmin = mainVm.user?.role == ADMIN,
-                        employee = employee.value!!
+                        employee = employee ?: Employee(),
                     ) { newData ->
-                        employeeVm.editEmployee(newData)
-                        employee.value = newData
                         showDialog.value = false
-                        mainVm.updateUser()
+                        onSave(newData)
+                    }
+
+                    DEPARTAMENT -> EditEmployeeDepartament(
+                        onCancelClick = { showDialog.value = false },
+                        employee = employee ?: Employee()
+                    ) { newData ->
+                        showDialog.value = false
+                        onSave(newData)
                     }
                 }
             }

@@ -33,6 +33,7 @@ import com.study.disgroupportal.BuildConfig.VERSION_NAME
 import com.study.disgroupportal.DisGroupPortalApp.Companion.curScreen
 import com.study.disgroupportal.R
 import com.study.disgroupportal.model.employee.EditEmployType.CONTACTS
+import com.study.disgroupportal.model.employee.EditEmployType.DEPARTAMENT
 import com.study.disgroupportal.model.employee.EditEmployType.DUTIES
 import com.study.disgroupportal.model.employee.EditEmployType.HEADER
 import com.study.disgroupportal.model.employee.UserRole.ADMIN
@@ -42,19 +43,16 @@ import com.study.disgroupportal.view.components.BlackColor
 import com.study.disgroupportal.view.components.TeaColor
 import com.study.disgroupportal.view.components.WhiteColor
 import com.study.disgroupportal.view.portal.employee.edit.EditEmployeeDialog
+import com.study.disgroupportal.viewmodel.EmployeeViewModel
 import com.study.disgroupportal.viewmodel.MainViewModel
 
 @Composable
 fun ProfileScreen(navHostController: NavHostController) {
+    val employeeVm = getViewModel<EmployeeViewModel>()
     val mainVm = getViewModel<MainViewModel>()
 
-    val currentEmployee = remember(mainVm.user) {
-        mutableStateOf(mainVm.user)
-    }
+    LaunchedEffect(Unit) { curScreen = PROFILE }
 
-    LaunchedEffect(Unit, currentEmployee.value) {
-        curScreen = PROFILE
-    }
     var editDialogType by remember {
         mutableStateOf(HEADER)
     }
@@ -91,19 +89,30 @@ fun ProfileScreen(navHostController: NavHostController) {
             onLogoutClick = { showExitDialog.value = true },
             settingsEnabled = enableSettings,
             showEditButton = enableSettings,
-            user = currentEmployee.value,
+            user = mainVm.user,
             onEditClick = {
                 editDialogType = HEADER
                 showEditDialog.value = true
             }
         )
 
-        if (!currentEmployee.value?.duties.isNullOrEmpty()) {
+        Spacer(Modifier.height(20.dp))
+
+        DepartamentCard(
+            departament = mainVm.user?.departament,
+            showEditButton = mainVm.user
+                ?.role == ADMIN && enableSettings
+        ) {
+            editDialogType = DEPARTAMENT
+            showEditDialog.value = true
+        }
+
+        if (!mainVm.user?.duties.isNullOrEmpty()) {
             Spacer(Modifier.height(20.dp))
             DutiesCard(
-                showEditButton = currentEmployee.value
+                showEditButton = mainVm.user
                     ?.role == ADMIN && enableSettings,
-                user = currentEmployee.value
+                user = mainVm.user
             ) {
                 editDialogType = DUTIES
                 showEditDialog.value = true
@@ -114,7 +123,7 @@ fun ProfileScreen(navHostController: NavHostController) {
 
         ContactsCard(
             showEditButton = enableSettings,
-            user = currentEmployee.value
+            user = mainVm.user
         ) {
             editDialogType = CONTACTS
             showEditDialog.value = true
@@ -151,9 +160,12 @@ fun ProfileScreen(navHostController: NavHostController) {
     EditEmployeeDialog(
         showDialog = showEditDialog,
         dismissRequestAction = {},
-        employee = currentEmployee,
+        employee = mainVm.user,
         type = editDialogType
-    )
+    ) { newData ->
+        employeeVm.editEmployee(newData)
+        mainVm.user = newData
+    }
 }
 
 @Composable

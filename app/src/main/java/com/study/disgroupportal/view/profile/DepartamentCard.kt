@@ -16,9 +16,9 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment.Companion.CenterVertically
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.LightGray
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -26,17 +26,16 @@ import androidx.compose.ui.text.font.FontWeight.Companion.Medium
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.study.disgroupportal.R
-import com.study.disgroupportal.model.employee.Employee
+import com.study.disgroupportal.model.portal.Departament
 import com.study.disgroupportal.view.components.BlackColor
 import com.study.disgroupportal.view.components.DefaultButton
 import com.study.disgroupportal.view.components.GrayColor
 import com.study.disgroupportal.view.components.WhiteAbsolutelyColor
 import com.study.disgroupportal.view.components.WhiteColor
 
-
 @Composable
-fun ContactsCard(
-    user: Employee?,
+fun DepartamentCard(
+    departament: Departament?,
     showEditButton: Boolean = false,
     onEditClick: () -> Unit = {}
 ) {
@@ -48,21 +47,21 @@ fun ContactsCard(
     ) {
         Spacer(Modifier.height(16.dp))
 
-        ContactsRow(
-            icon = R.drawable.ic_email,
-            contact = user?.email
+        DepartamentRow(
+            icon = R.drawable.ic_division,
+            value = departament?.division?.title
                 ?.ifBlank { stringResource(R.string.none) }
                 ?: stringResource(R.string.none)
         )
 
         HorizontalDivider(
             modifier = Modifier.padding(16.dp, 6.dp),
-            color = LightGray
+            color = Color.LightGray
         )
 
-        ContactsRow(
-            icon = R.drawable.ic_phone,
-            contact = user?.phone
+        DepartamentRow(
+            icon = R.drawable.ic_departament,
+            value = departament?.title
                 ?.ifBlank { stringResource(R.string.none) }
                 ?: stringResource(R.string.none)
         )
@@ -84,13 +83,13 @@ fun ContactsCard(
 }
 
 @Composable
-private fun ContactsRow(
+fun DepartamentRow(
     @DrawableRes
     icon: Int,
-    contact: String,
+    value: String,
 ) {
     Row(
-        verticalAlignment = CenterVertically,
+        verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .padding(12.dp)
@@ -109,7 +108,7 @@ private fun ContactsRow(
             fontWeight = Medium,
             color = GrayColor,
             fontSize = 18.sp,
-            text = contact
+            text = value
         )
     }
 }

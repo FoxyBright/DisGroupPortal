@@ -33,8 +33,10 @@ import com.study.disgroupportal.tools.Navigation.navigateTo
 import com.study.disgroupportal.tools.getViewModel
 import com.study.disgroupportal.view.components.GrayColor
 import com.study.disgroupportal.view.components.WhiteColor
+import com.study.disgroupportal.viewmodel.EmployeeViewModel
 import com.study.disgroupportal.viewmodel.MainViewModel
 import com.study.disgroupportal.viewmodel.NewsViewModel
+import com.study.disgroupportal.viewmodel.RequestsViewModel
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,6 +44,8 @@ fun ExitDialog(
     navHostController: NavHostController,
     showErrorDialog: MutableState<Boolean>,
 ) {
+    val employeeVm = getViewModel<EmployeeViewModel>()
+    val requestsVm = getViewModel<RequestsViewModel>()
     val newsVm = getViewModel<NewsViewModel>()
     val mainVm = getViewModel<MainViewModel>()
 
@@ -109,7 +113,9 @@ fun ExitDialog(
                                 dest = LOGIN
                             )
                             mainVm.logout()
+                            employeeVm.clearVm()
                             newsVm.clearNewVm()
+                            requestsVm.clearVm()
                         },
                         colors = buttonColors(Transparent),
                         shape = RoundedCornerShape(12.dp)

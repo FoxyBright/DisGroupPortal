@@ -2,12 +2,15 @@ package com.study.disgroupportal.view.portal.employee.edit
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,6 +30,8 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.study.disgroupportal.R
 import com.study.disgroupportal.model.employee.Employee
+import com.study.disgroupportal.model.employee.UserRole
+import com.study.disgroupportal.tools.getViewModel
 import com.study.disgroupportal.tools.neededStoragePermissions
 import com.study.disgroupportal.tools.openGallery
 import com.study.disgroupportal.tools.showToast
@@ -34,6 +39,7 @@ import com.study.disgroupportal.view.components.BlackColor
 import com.study.disgroupportal.view.components.DefaultButton
 import com.study.disgroupportal.view.components.WhiteColor
 import com.study.disgroupportal.view.portal.employee.EmployeeAvatar
+import com.study.disgroupportal.viewmodel.MainViewModel
 
 @Composable
 @OptIn(ExperimentalPermissionsApi::class)
@@ -81,6 +87,9 @@ fun EditHeaderDialog(
             employee = remember(employee, avatarPath) {
                 mutableStateOf(employee.copy(avatarPath = avatarPath))
             }.value,
+            modifier = Modifier
+                .background(WhiteColor, CircleShape)
+                .border(3.dp, BlackColor, CircleShape),
             size = 100.dp
         ) {
             permissionStorageState.openGallery(

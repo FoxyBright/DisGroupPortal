@@ -1,6 +1,5 @@
 package com.study.disgroupportal.model.employee
 
-import android.graphics.Bitmap
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
@@ -24,7 +23,7 @@ data class Employee(
     val avatarPath: String = "",
     val login: String? = null,
     val role: UserRole = USER,
-    val duties: List<String> = emptyList(),
+    val duties: List<String> = listOf("", "", "", "", ""),
     val email: String = "",
     val phone: String = ""
 )

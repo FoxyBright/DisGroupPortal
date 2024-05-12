@@ -369,7 +369,12 @@ private fun LoginTextField(
             )
     ) {
         BasicTextField(
-            onValueChange = { value.value = it },
+            onValueChange = {
+                val text = if (it.firstOrNull() == ' ') {
+                    it.substringAfter(" ")
+                } else it
+                value.value = text
+            },
             value = value.value,
             textStyle = TextStyle(
                 fontWeight = Medium,

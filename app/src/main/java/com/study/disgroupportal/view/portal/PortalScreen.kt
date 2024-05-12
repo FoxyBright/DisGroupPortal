@@ -23,24 +23,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.study.disgroupportal.DisGroupPortalApp.Companion.curScreen
-import com.study.disgroupportal.model.employee.Employee
+import com.study.disgroupportal.model.employee.UserRole.ADMIN
+import com.study.disgroupportal.model.employee.UserRole.USER
 import com.study.disgroupportal.model.navigation.Destination.PORTAl
 import com.study.disgroupportal.model.portal.Departament
 import com.study.disgroupportal.model.portal.Departament.Companion.getListByDivision
 import com.study.disgroupportal.model.portal.Division
 import com.study.disgroupportal.model.portal.Tile
 import com.study.disgroupportal.tools.getViewModel
+import com.study.disgroupportal.view.components.AddFloatingButton
 import com.study.disgroupportal.view.components.WhiteColor
 import com.study.disgroupportal.view.portal.employee.EmployeeInfoScreen
 import com.study.disgroupportal.view.portal.employee.EmployeeItem
 import com.study.disgroupportal.viewmodel.EmployeeViewModel
+import com.study.disgroupportal.viewmodel.MainViewModel
 
 private const val defaultTitle = "Корпоративный портал"
 
 @Composable
 fun PortalScreen() {
+    val employeeVm = getViewModel<EmployeeViewModel>()
+    val mainVm = getViewModel<MainViewModel>()
     val focusManager = LocalFocusManager.current
     LaunchedEffect(Unit) { curScreen = PORTAl }
+
 
     val title = remember {
         mutableStateOf(defaultTitle)
@@ -50,41 +56,48 @@ fun PortalScreen() {
         mutableStateOf(false)
     }
 
-    val selectedEmployee = remember {
-        mutableStateOf<Employee?>(null)
-    }
-    val selectedDivision = remember {
-        mutableStateOf<Division?>(null)
-    }
-    val selectedDepartament = remember {
-        mutableStateOf<Departament?>(null)
+    val showEmployees by remember(
+        employeeVm.selectedDepartament,
+        employeeVm.searchText.value,
+        searchFocus.value
+    ) {
+        val show = employeeVm.searchText.value.isNotBlank()
+                || employeeVm.selectedDepartament != null
+                || searchFocus.value
+        mutableStateOf(show)
     }
 
     fun onBackClick() {
-        selectedEmployee.value
-            ?.let { selectedEmployee.value = null }
-            ?: selectedDepartament.value
-                ?.let { selectedDepartament.value = null }
-            ?: selectedDivision.value
-                ?.run { selectedDivision.value = null }
+        employeeVm.selectedEmployee
+            ?.let { employeeVm.selectedEmployee = null }
+            ?: employeeVm.selectedDepartament
+                ?.let { employeeVm.selectedDepartament = null }
+            ?: employeeVm.selectedDivision
+                ?.run { employeeVm.selectedDivision = null }
+        employeeVm.isAddEmployee = false
     }
 
     BackHandler(
-        enabled = selectedEmployee.value != null
-                || selectedDepartament.value != null
-                || selectedDivision.value != null,
+        enabled = employeeVm.selectedEmployee != null
+                || employeeVm.selectedDepartament != null
+                || employeeVm.selectedDivision != null
+                || employeeVm.isAddEmployee,
         onBack = ::onBackClick
     )
 
     Scaffold(
         topBar = {
             PortalTopBar(
-                showSearch = selectedEmployee.value == null,
                 showBackButton = title.value != defaultTitle,
                 onBackClick = ::onBackClick,
                 focus = searchFocus,
                 title = title.value
             )
+        },
+        floatingActionButton = {
+            if (mainVm.user?.role == ADMIN && showEmployees) {
+                AddFloatingButton { employeeVm.isAddEmployee = true }
+            }
         },
         modifier = Modifier
             .fillMaxSize()
@@ -98,10 +111,8 @@ fun PortalScreen() {
     ) { paddings ->
         Content(
             modifier = Modifier.padding(paddings),
-            searchFocus = searchFocus.value,
-            employee = selectedEmployee,
-            departament = selectedDepartament,
-            division = selectedDivision,
+            showEmployees = showEmployees,
+            onBackClick = ::onBackClick,
             title = title
         )
     }
@@ -109,50 +120,56 @@ fun PortalScreen() {
 
 @Composable
 private fun Content(
-    searchFocus: Boolean,
-    departament: MutableState<Departament?>,
-    employee: MutableState<Employee?>,
-    division: MutableState<Division?>,
+    showEmployees: Boolean,
     title: MutableState<String>,
     modifier: Modifier = Modifier,
+    onBackClick: () -> Unit
 ) {
     val employeeVm = getViewModel<EmployeeViewModel>()
     LaunchedEffect(Unit) { employeeVm.uploadEmployees() }
 
-    LaunchedEffect(division.value, departament.value, employee.value) {
+    LaunchedEffect(
+        employeeVm.selectedDepartament,
+        employeeVm.selectedDivision,
+        employeeVm.selectedEmployee
+    ) {
         title.value = when {
-            employee.value != null -> buildString {
-                val dep = employee.value
+            employeeVm.selectedEmployee != null -> buildString {
+                val dep = employeeVm.selectedEmployee
                     ?.departament ?: return@buildString
                 append(dep.division.title)
                 append("\n")
                 append(dep.title)
             }
 
-            departament.value != null -> buildString {
-                val dep = departament.value
+            employeeVm.selectedDepartament != null -> buildString {
+                val dep = employeeVm.selectedDepartament
                     ?: return@buildString
                 append(dep.division.title)
                 append("\n")
                 append(dep.title)
             }
 
-            division.value != null -> division.value?.title ?: ""
+            employeeVm.selectedDivision != null -> {
+                employeeVm.selectedDivision?.title ?: ""
+            }
 
             else -> defaultTitle
         }
     }
 
     val employees = remember(
+        employeeVm.selectedDepartament,
         employeeVm.employees.toList(),
         employeeVm.searchText.value,
-        division.value, departament.value
+        employeeVm.selectedDivision
     ) {
         employeeVm.employees.filter { employee ->
-            val inDivision = division.value
+            val isUser = employee.role == USER
+            val inDivision = employeeVm.selectedDivision
                 ?.run { employee.departament?.division == this }
                 ?: true
-            val inDepartament = departament.value
+            val inDepartament = employeeVm.selectedDepartament
                 ?.run { employee.departament == this }
                 ?: true
             employeeVm.searchText.value.let { text ->
@@ -160,44 +177,45 @@ private fun Content(
                     duties.any { it.contains(text) }
                             || name.contains(text)
                 } else true
-            }.let { it && inDepartament && inDivision }
+            }.let { it && inDepartament && inDivision && isUser }
         }
     }
 
-    val tiles = remember(division.value, departament.value) {
-        val list: List<Tile> = division.value
+    val tiles = remember(employeeVm.selectedDivision) {
+        val list: List<Tile> = employeeVm.selectedDivision
             ?.let { getListByDivision(it) }
             ?: Division.entries
         list.toMutableStateList()
     }
 
-    val showEmployees by remember(
-        employeeVm.searchText.value, departament.value, searchFocus
-    ) {
-        val show = employeeVm.searchText.value.isNotBlank()
-                || departament.value != null
-                || searchFocus
-        mutableStateOf(show)
-    }
-
     LazyColumn(modifier.fillMaxSize()) {
         when {
-            employee.value != null -> item {
-                EmployeeInfoScreen(employee.value!!)
+            employeeVm.run {
+                selectedEmployee != null || isAddEmployee
+            } -> item {
+                EmployeeInfoScreen(
+                    employee = employeeVm.selectedEmployee,
+                    isAdd = employeeVm.isAddEmployee,
+                    onBack = onBackClick
+                )
             }
 
             showEmployees -> items(employees) {
                 EmployeeItem(
                     employee = it,
                     modifier = Modifier.padding(horizontal = 16.dp)
-                ) { employee.value = it }
+                ) { employeeVm.selectedEmployee = it }
                 Spacer(Modifier.height(12.dp))
             }
 
             else -> itemsIndexed(tiles) { i, tile ->
                 TileItem(tile, i % 2 != 0) { select ->
-                    if (select is Departament) departament.value = select
-                    if (select is Division) division.value = select
+                    if (select is Departament) {
+                        employeeVm.selectedDepartament = select
+                    }
+                    if (select is Division) {
+                        employeeVm.selectedDivision = select
+                    }
                 }
             }
         }
