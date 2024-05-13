@@ -1,6 +1,8 @@
 package com.study.disgroupportal.view.news
 
 import android.net.Uri
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -39,17 +41,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextAlign.Companion.End
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.study.disgroupportal.DisGroupPortalApp
 import com.study.disgroupportal.R
 import com.study.disgroupportal.data.DataSource.getNewById
@@ -74,12 +74,14 @@ fun NewInfoScreen(
     navHostController: NavHostController,
     newId: String,
 ) {
-    val newsVm = getViewModel<NewsViewModel>()
-    val mainVm = getViewModel<MainViewModel>()
-
     val context = LocalContext.current
+
     var new by remember(newId) {
         mutableStateOf<New?>(null)
+    }
+
+    BackHandler(true) {
+        navHostController.navigateUp()
     }
 
     LaunchedEffect(Unit) {
@@ -96,136 +98,7 @@ fun NewInfoScreen(
             .verticalScroll(rememberScrollState())
     ) {
         new?.apply {
-            Box {
-                when {
-                    imagePath.isNotBlank() -> Uri.parse(imagePath)
-                    imageUrl.isNotBlank() -> imageUrl
-                    else -> null
-                }?.let { image ->
-                    AsyncImage(
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp),
-                        contentScale = Crop,
-                        model = image
-                    )
-                } ?: run {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp)
-                            .background(TeaColor),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = stringResource(R.string.new_placeholder_image),
-                            fontWeight = SemiBold,
-                            color = WhiteColor,
-                            fontSize = 30.sp
-                        )
-                    }
-                }
-                Box(
-                    contentAlignment = BottomCenter,
-                    modifier = Modifier
-                        .background(
-                            brush = verticalGradient(
-                                listOf(Transparent, BlackColor.copy(.5f))
-                            )
-                        )
-                        .fillMaxWidth()
-                        .align(BottomCenter)
-                        .padding(12.dp)
-                ) {
-                    Text(
-                        modifier = Modifier.padding(top = 20.dp),
-                        fontWeight = SemiBold,
-                        color = WhiteColor,
-                        fontSize = 22.sp,
-                        textAlign = End,
-                        text = title
-                    )
-                }
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(40.dp)
-                        .background(
-                            brush = verticalGradient(
-                                listOf(BlackColor.copy(.5f), Transparent)
-                            )
-                        ),
-                    contentAlignment = Alignment.CenterStart
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_back_arrow),
-                        contentDescription = null,
-                        tint = WhiteColor,
-                        modifier = Modifier
-                            .padding(start = 12.dp)
-                            .size(24.dp)
-                            .clickable(
-                                interactionSource = remember {
-                                    MutableInteractionSource()
-                                },
-                                indication = null
-                            ) { navHostController.navigateUp() }
-                    )
-
-                    if (mainVm.user?.role == ADMIN) {
-                        Row(
-                            modifier = Modifier.align(CenterEnd),
-                            verticalAlignment = CenterVertically
-                        ) {
-                            Icon(
-                                imageVector = ImageVector
-                                    .vectorResource(R.drawable.ic_edit),
-                                contentDescription = null,
-                                tint = WhiteColor,
-                                modifier = Modifier
-                                    .padding(end = 12.dp)
-                                    .size(24.dp)
-                                    .clickable(
-                                        interactionSource = remember {
-                                            MutableInteractionSource()
-                                        },
-                                        indication = null
-                                    ) {
-                                        navHostController.navigateTo(
-                                            arg = NavArgument(
-                                                argument = NEW_INFO_ARG,
-                                                value = id
-                                            ),
-                                            dest = ADD_NEW
-                                        )
-                                    }
-                            )
-
-                            Spacer(Modifier.width(8.dp))
-
-                            Icon(
-                                imageVector = ImageVector
-                                    .vectorResource(R.drawable.ic_delete),
-                                contentDescription = null,
-                                tint = WhiteColor,
-                                modifier = Modifier
-                                    .padding(end = 12.dp)
-                                    .size(24.dp)
-                                    .clickable(
-                                        interactionSource = remember {
-                                            MutableInteractionSource()
-                                        },
-                                        indication = null
-                                    ) {
-                                        newsVm.deleteNew(this@apply)
-                                        navHostController.navigateUp()
-                                    }
-                            )
-                        }
-                    }
-                }
-            }
+            NewImage(this, navHostController)
 
             Spacer(Modifier.height(20.dp))
 
@@ -241,41 +114,18 @@ fun NewInfoScreen(
 
             Spacer(Modifier.height(20.dp))
 
-            val riaNews = stringResource(R.string.ria_news)
-            val sourceText = buildAnnotatedString {
-                append(stringResource(R.string.source))
-
-                withStyle(SpanStyle(TeaColor)) {
-                    append(" $riaNews")
-                }
-
-                val text = remember { toAnnotatedString().text }
-                val linkIndex = remember { text.indexOf(riaNews) }
-
-                addStringAnnotation(
-                    end = linkIndex + riaNews.length,
-                    annotation = riaNews,
-                    start = linkIndex,
-                    tag = riaNews
-                )
-            }
-
             if (link.isNotBlank()) {
                 ClickableText(
+                    onClick = { openInWeb(context, link) },
                     modifier = Modifier.fillMaxWidth(),
                     style = TextStyle(
                         textAlign = TextAlign.Center,
                         fontWeight = SemiBold,
-                        color = DarkGray,
+                        color = TeaColor,
                         fontSize = 16.sp
                     ),
-                    text = sourceText,
-                    onClick = {
-                        sourceText
-                            .getStringAnnotations(riaNews, it, it)
-                            .firstOrNull()?.let {
-                                openInWeb(context, link)
-                            }
+                    text = buildAnnotatedString {
+                        append(stringResource(R.string.source))
                     }
                 )
             }
@@ -283,6 +133,146 @@ fun NewInfoScreen(
             Spacer(Modifier.height(40.dp))
         } ?: run {
             ProgressIndicator()
+        }
+    }
+}
+
+@Composable
+private fun NewImage(
+    new: New,
+    navHostController: NavHostController
+) {
+    val newsVm = getViewModel<NewsViewModel>()
+    val mainVm = getViewModel<MainViewModel>()
+
+    Box {
+        when {
+            new.imagePath.isNotBlank() -> Uri.parse(new.imagePath)
+            new.imageUrl.isNotBlank() -> new.imageUrl
+            else -> null
+        }?.let { image ->
+            Image(
+                painter = rememberAsyncImagePainter(image),
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp),
+                contentScale = Crop,
+            )
+        } ?: run {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .background(TeaColor),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(R.string.new_placeholder_image),
+                    fontWeight = SemiBold,
+                    color = WhiteColor,
+                    fontSize = 30.sp
+                )
+            }
+        }
+        Box(
+            contentAlignment = BottomCenter,
+            modifier = Modifier
+                .background(
+                    brush = verticalGradient(
+                        listOf(Transparent, BlackColor.copy(.5f))
+                    )
+                )
+                .fillMaxWidth()
+                .align(BottomCenter)
+                .padding(12.dp)
+        ) {
+            Text(
+                modifier = Modifier.padding(top = 20.dp),
+                fontWeight = SemiBold,
+                color = WhiteColor,
+                fontSize = 22.sp,
+                textAlign = End,
+                text = new.title
+            )
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(40.dp)
+                .background(
+                    brush = verticalGradient(
+                        listOf(BlackColor.copy(.5f), Transparent)
+                    )
+                ),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_back_arrow),
+                contentDescription = null,
+                tint = WhiteColor,
+                modifier = Modifier
+                    .padding(start = 12.dp)
+                    .size(24.dp)
+                    .clickable(
+                        interactionSource = remember {
+                            MutableInteractionSource()
+                        },
+                        indication = null
+                    ) { navHostController.navigateUp() }
+            )
+
+            if (mainVm.user?.role == ADMIN) {
+                Row(
+                    modifier = Modifier.align(CenterEnd),
+                    verticalAlignment = CenterVertically
+                ) {
+                    Icon(
+                        imageVector = ImageVector
+                            .vectorResource(R.drawable.ic_edit),
+                        contentDescription = null,
+                        tint = WhiteColor,
+                        modifier = Modifier
+                            .padding(end = 12.dp)
+                            .size(24.dp)
+                            .clickable(
+                                interactionSource = remember {
+                                    MutableInteractionSource()
+                                },
+                                indication = null
+                            ) {
+                                navHostController.navigateTo(
+                                    arg = NavArgument(
+                                        argument = NEW_INFO_ARG,
+                                        value = new.id
+                                    ),
+                                    dest = ADD_NEW
+                                )
+                            }
+                    )
+
+                    Spacer(Modifier.width(8.dp))
+
+                    Icon(
+                        imageVector = ImageVector
+                            .vectorResource(R.drawable.ic_delete),
+                        contentDescription = null,
+                        tint = WhiteColor,
+                        modifier = Modifier
+                            .padding(end = 12.dp)
+                            .size(24.dp)
+                            .clickable(
+                                interactionSource = remember {
+                                    MutableInteractionSource()
+                                },
+                                indication = null
+                            ) {
+                                newsVm.deleteNew(new)
+                                navHostController.navigateUp()
+                            }
+                    )
+                }
+            }
         }
     }
 }

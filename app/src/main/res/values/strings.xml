@@ -11,8 +11,7 @@
     <string name="error_title">Произошла ошибка</string>
     <string name="news">Новости</string>
     <string name="profile">Профиль</string>
-    <string name="source">Источник:</string>
-    <string name="ria_news">РИА Новости</string>
+    <string name="source">Перейти на страницу новости</string>
     <string name="exit_agree">Вы уверены что хотите выйти?</string>
     <string name="exit_dialog">Выход</string>
     <string name="empty_requests">Пока что запросов нет</string>
