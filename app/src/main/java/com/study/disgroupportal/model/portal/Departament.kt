@@ -17,131 +17,130 @@ enum class Departament(
 ) : Tile {
 
     Expert_Management(
-        image = R.drawable.consulting,
+        image = R.drawable.expert,
         title = "Экспертное управление",
-        description = "",
+        description = "Подготовка экспертных заключений, аналитических докладов и иных необходимых материалов.",
         division = CONSULTING
     ),
     Evaluation_Service(
-        image = R.drawable.consulting,
+        image = R.drawable.marking,
         title = "Служба оценки",
-        description = "",
+        description = "Широкопрофильный отдел, который оказывает услуги по экспертизе и оценке любых видов продуктов.",
         division = CONSULTING
     ),
     Research_Office(
-        image = R.drawable.consulting,
+        image = R.drawable.research,
         title = "Управление исследований",
-        description = "",
+        description = "Отдел проектирования и руководства процессами.",
         division = CONSULTING
     ),
     Analytical_Department(
-        image = R.drawable.consulting,
+        image = R.drawable.analitycs,
         title = "Аналитический отдел",
-        description = "",
+        description = "Оценивает финансовое состояние компании, определяет ликвидность и рентабельность фирмы.",
         division = CONSULTING
     ),
 
-
     Patent_Marketing(
-        image = R.drawable.marketing,
+        image = R.drawable.patent,
         title = "Патентный маркетинг",
-        description = "",
+        description = "Отдел защиты бизнеса от правовых посягательств.",
         division = MARKETING
     ),
     Patent_Rating(
-        image = R.drawable.marketing,
+        image = R.drawable.rating,
         title = "Патентный рейтинг",
-        description = "",
+        description = "Эксперты в области интеллектуальной собственности, которые представляют интересы клиента.",
         division = MARKETING
     ),
     Advertising_Department(
-        image = R.drawable.marketing,
+        image = R.drawable.advertising,
         title = "Отдел рекламы",
-        description = "",
+        description = "Отдел проведения мероприятий в сфере маркетинговых коммуникаций и реализацией выбранной маркетинговой стратегии.",
         division = MARKETING
     ),
     Sales_Department(
-        image = R.drawable.marketing,
+        image = R.drawable.sales,
         title = "Отдел продаж",
-        description = "",
+        description = "Структурное подразделение компании, которое отвечает за продажу товаров или услуг.",
         division = MARKETING
     ),
 
 
     Financial_Expertise(
-        image = R.drawable.accounting,
+        image = R.drawable.fin_help,
         title = "Финансовая экспертиза",
-        description = "",
+        description = "Отдел, заведующий достоверностью финансовой отчетности предприятия.",
         division = ACCOUNTING
     ),
     Investments_Management(
-        image = R.drawable.accounting,
+        image = R.drawable.investion,
         title = "Управление инвистиций",
-        description = "",
+        description = "Профессиональное управление активами различных ценных бумаг, включая пакеты акций, облигации и другие активы.",
         division = ACCOUNTING
     ),
     Investments_Asset(
-        image = R.drawable.accounting,
+        image = R.drawable.action,
         title = "Управление активами",
-        description = "",
+        description = "Отдел разработки, эксплуатации, технического обслуживания, модернизации и распоряжения активами.",
         division = ACCOUNTING
     ),
     Invest_Banking(
-        image = R.drawable.accounting,
+        image = R.drawable.banking,
         title = "Инвест банкинг",
-        description = "",
+        description = "Отдел проводящий операции по выводу ценных бумаг акционерных обществ на финансовый рынок.",
         division = ACCOUNTING
     ),
 
 
     Licensing_Management(
-        image = R.drawable.buisens_help,
+        image = R.drawable.license,
         title = "Лицензионный менеджмент",
-        description = "",
+        description = "Отдел управления лицензиями на программное обеспечение.",
         division = BUSINESS_HELP
     ),
     Risk_Management(
-        image = R.drawable.buisens_help,
+        image = R.drawable.risk,
         title = "Риск менеджмент",
-        description = "",
+        description = "Отдел идентифицации, анализа, оценки и управления потенциальными угрозами или негативными последствиями.",
         division = BUSINESS_HELP
     ),
     Strategic_Analysis(
-        image = R.drawable.buisens_help,
+        image = R.drawable.analis,
         title = "Стратегический анализ",
-        description = "",
+        description = "Отдел исследования деятельности компании и факторов окружающей среды, влияющих на её положение и конкурентоспособность.",
         division = BUSINESS_HELP
     ),
     Development_Department(
-        image = R.drawable.buisens_help,
+        image = R.drawable.develop,
         title = "Отдел разработок",
-        description = "",
+        description = "Занимается разработкой технических проектов ПО, построением архитектуры программных систем, определением технических и программных требований к ПО.",
         division = BUSINESS_HELP
     ),
 
 
     Operational_Management(
-        image = R.drawable.client_help,
+        image = R.drawable.operation,
         title = "Операционное управление",
-        description = "",
+        description = "Отдел управления операциями, которые позволяют достигать результата деятельности компании.",
         division = CLIENT_HELP
     ),
     Insurance_Products(
-        image = R.drawable.client_help,
+        image = R.drawable.strah,
         title = "Страховые продукты",
-        description = "",
+        description = "Отдел возмещения убытков страхователю, произошедшие вследствие оговоренных страховых событий.",
         division = CLIENT_HELP
     ),
     Support_Service(
-        image = R.drawable.client_help,
+        image = R.drawable.callcenter,
         title = "Служба системного сопровождения",
-        description = "",
+        description = "Отдельная служба, созданная для получения и обработки обращений клиентов.",
         division = CLIENT_HELP
     ),
     Consulting_Department(
         image = R.drawable.client_help,
         title = "Отдел консультации",
-        description = "",
+        description = "Отдел услуг экспертной помощи и консультаций по различным вопросам в бизнесе.",
         division = CLIENT_HELP
     );
 
