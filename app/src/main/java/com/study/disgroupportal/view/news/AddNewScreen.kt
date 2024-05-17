@@ -3,8 +3,10 @@ package com.study.disgroupportal.view.news
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -29,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Alignment.Companion.CenterStart
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
@@ -36,13 +39,14 @@ import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale.Companion.Crop
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.font.FontWeight.Companion.Medium
-import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.KeyboardCapitalization.Companion.Sentences
+import androidx.compose.ui.text.input.KeyboardType.Companion.Text
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -60,7 +64,6 @@ import com.study.disgroupportal.tools.openGallery
 import com.study.disgroupportal.view.components.DefaultButton
 import com.study.disgroupportal.view.components.TeaColor
 import com.study.disgroupportal.view.components.WhiteColor
-import com.study.disgroupportal.view.requests.TopBar
 import com.study.disgroupportal.viewmodel.NewsViewModel
 
 @Composable
@@ -198,11 +201,11 @@ fun AddNewScreen(
                     .fillMaxWidth()
                     .padding(bottom = 12.dp, top = 6.dp)
                     .padding(horizontal = 16.dp)
-                    .border(1.dp, Gray, RoundedCornerShape(16.dp))
+                    .border(1.dp, DarkGray, RoundedCornerShape(16.dp))
                     .padding(10.dp, 6.dp),
                 keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.Sentences,
-                    keyboardType = KeyboardType.Text
+                    capitalization = Sentences,
+                    keyboardType = Text
                 )
             ) { innerText ->
                 Column {
@@ -230,11 +233,11 @@ fun AddNewScreen(
                     .fillMaxWidth()
                     .padding(bottom = 12.dp, top = 6.dp)
                     .padding(horizontal = 16.dp)
-                    .border(1.dp, Gray, RoundedCornerShape(16.dp))
+                    .border(1.dp, DarkGray, RoundedCornerShape(16.dp))
                     .padding(10.dp, 6.dp),
                 keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.Sentences,
-                    keyboardType = KeyboardType.Text
+                    capitalization = Sentences,
+                    keyboardType = Text
                 )
             ) { innerText ->
                 Column {
@@ -267,8 +270,8 @@ fun AddNewScreen(
                     .border(1.dp, Gray, RoundedCornerShape(16.dp))
                     .padding(10.dp, 6.dp),
                 keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.Sentences,
-                    keyboardType = KeyboardType.Text
+                    capitalization = Sentences,
+                    keyboardType = Text
                 )
             ) { innerText ->
                 Column {
@@ -306,3 +309,28 @@ fun AddNewScreen(
     }
 }
 
+@Composable
+private fun TopBar(navHostController: NavHostController) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(TeaColor),
+        contentAlignment = CenterStart
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.ic_back_arrow),
+            contentDescription = null,
+            tint = WhiteColor,
+            modifier = Modifier
+                .padding(vertical = 6.dp)
+                .padding(start = 12.dp)
+                .size(24.dp)
+                .clickable(
+                    interactionSource = remember {
+                        MutableInteractionSource()
+                    },
+                    indication = null
+                ) { navHostController.navigateUp() }
+        )
+    }
+}

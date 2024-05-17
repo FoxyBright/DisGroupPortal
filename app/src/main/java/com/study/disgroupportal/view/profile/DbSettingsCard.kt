@@ -19,12 +19,12 @@ import com.study.disgroupportal.view.components.WhiteColor
 import com.study.disgroupportal.viewmodel.EmployeeViewModel
 import com.study.disgroupportal.viewmodel.MainViewModel
 import com.study.disgroupportal.viewmodel.NewsViewModel
-import com.study.disgroupportal.viewmodel.RequestsViewModel
+import com.study.disgroupportal.viewmodel.StatementViewModel
 
 @Composable
 fun DbSettingsCard(showDbSettings: MutableState<Boolean>) {
     val employeeVm = getViewModel<EmployeeViewModel>()
-    val requestsVm = getViewModel<RequestsViewModel>()
+    val statementsVm = getViewModel<StatementViewModel>()
     val mainVm = getViewModel<MainViewModel>()
     val newsVm = getViewModel<NewsViewModel>()
 
@@ -44,7 +44,7 @@ fun DbSettingsCard(showDbSettings: MutableState<Boolean>) {
                 ) {
                     mainVm.setDatabasePresets()
                     employeeVm.uploadEmployees()
-                    requestsVm.uploadRequests(mainVm.user)
+                    statementsVm.uploadStatements(mainVm.user)
                     newsVm.uploadNews()
                     showDbSettings.value = false
                 }
@@ -58,9 +58,8 @@ fun DbSettingsCard(showDbSettings: MutableState<Boolean>) {
                 ) {
                     mainVm.clearDatabase()
                     employeeVm.employees.clear()
+                    statementsVm.statements.clear()
                     newsVm.news.clear()
-                    requestsVm.clearRequests()
-                    requestsVm.clearFilters()
                     showDbSettings.value = false
                 }
             }

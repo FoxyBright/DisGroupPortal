@@ -9,6 +9,7 @@
     <string name="select_departament">Выбор отдела</string>
     <string name="select_division">Выбор подразделения</string>
     <string name="error_title">Произошла ошибка</string>
+    <string name="error_camera">Не удалось сделать снимок, попробуйте еще раз</string>
     <string name="news">Новости</string>
     <string name="profile">Профиль</string>
     <string name="source">Перейти на страницу новости</string>
@@ -22,7 +23,7 @@
     <string name="deductions">Налоговые вычеты</string>
     <string name="fine">Штрафы</string>
     <string name="theme">Тема:</string>
-    <string name="status">Статус:</string>
+    <string name="status">Статус: %s</string>
     <string name="author">Автор:</string>
     <string name="request">Запрос №</string>
     <string name="version">Версия: %s</string>
@@ -49,7 +50,7 @@
     <string name="edit_new">Редактирование новости</string>
     <string name="edit">Редактировать</string>
     <string name="save">Сохранить</string>
-    <string name="delete_request">Удалить запрос</string>
+    <string name="delete_statement">Удалить заявление</string>
     <string name="delete_employee">Удалить сотрудника</string>
     <string name="add">Добавить</string>
     <string name="select_theme">Выберите тему запроса:</string>
@@ -71,4 +72,35 @@
     <string name="edit_post_placeholder">Введите должность…</string>
     <string name="duties">Должностные обязанности:</string>
     <string name="edit_employee">Редактирование сотрудника</string>
+
+    <string name="unpaid_leave">Неоплачиваемый отпуск</string>
+    <string name="paid_leave">Запланированный отпуск</string>
+    <string name="dismissal">Увольнение</string>
+    <string name="day_off">Отгул</string>
+    <string name="medical">Больничный</string>
+    <string name="recalculation_of_salary">Перерасчет зарплаты</string>
+    <string name="statement_of">Заявление на %s</string>
+    <string name="reporting">Отчетность</string>
+    <string name="opened_status">В обработке</string>
+    <string name="canceled_status">Отклонен</string>
+    <string name="closed_status">Одобрен</string>
+    <string name="opened_statements">Открытые</string>
+    <string name="closed_statements">Закрытые</string>
+    <string name="statements_theme">Тема заявления:</string>
+    <string name="content">Содержание:</string>
+    <string name="answer_from">Ответ от: %s</string>
+    <string name="add_answer">Добавить ответ…</string>
+    <string name="add_content">Добавить содержание…</string>
+    <string name="in_work">В работе с: %s</string>
+    <string name="is_closed">Закрыт с: %s</string>
+    <string name="cancel_statement">Отклонить</string>
+    <string name="approve_statement">Одобрить</string>
+    <string name="from">от %s</string>
+
+    UNPAID_LEAVE(R.string.unpaid_leave),
+    PAID_LEAVE(R.string.paid_leave),
+    DAY_OFF(R.string.paid_leave),
+    MEDICAL(R.string.paid_leave),
+    RECALCULATION_OF_SALARY(R.string.paid_leave),
+    // Неоплачиваемый отпуск Запланированный отпуск Отгул Больничный Увольнение
 </resources>

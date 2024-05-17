@@ -36,7 +36,7 @@ import com.study.disgroupportal.view.components.WhiteColor
 import com.study.disgroupportal.viewmodel.EmployeeViewModel
 import com.study.disgroupportal.viewmodel.MainViewModel
 import com.study.disgroupportal.viewmodel.NewsViewModel
-import com.study.disgroupportal.viewmodel.RequestsViewModel
+import com.study.disgroupportal.viewmodel.StatementViewModel
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,7 +45,7 @@ fun ExitDialog(
     showErrorDialog: MutableState<Boolean>,
 ) {
     val employeeVm = getViewModel<EmployeeViewModel>()
-    val requestsVm = getViewModel<RequestsViewModel>()
+    val statementVm = getViewModel<StatementViewModel>()
     val newsVm = getViewModel<NewsViewModel>()
     val mainVm = getViewModel<MainViewModel>()
 
@@ -113,9 +113,9 @@ fun ExitDialog(
                                 dest = LOGIN
                             )
                             mainVm.logout()
+                            statementVm.statements.clear()
                             employeeVm.clearVm()
                             newsVm.clearNewVm()
-                            requestsVm.clearVm()
                         },
                         colors = buttonColors(Transparent),
                         shape = RoundedCornerShape(12.dp)

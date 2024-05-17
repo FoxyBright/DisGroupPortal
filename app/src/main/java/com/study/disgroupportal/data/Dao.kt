@@ -6,9 +6,9 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.Query
 import androidx.room.Update
-import com.study.disgroupportal.model.news.New
-import com.study.disgroupportal.model.requests.Request
 import com.study.disgroupportal.model.employee.Employee
+import com.study.disgroupportal.model.news.New
+import com.study.disgroupportal.model.statement.Statement
 
 @Dao
 interface Dao {
@@ -35,26 +35,26 @@ interface Dao {
 
     /// Запросы ///////////////////////////////////////////////
 
-    @Query("SELECT * FROM requests")
-    suspend fun getRequests(): List<Request>
+    @Query("SELECT * FROM statement")
+    suspend fun getRequests(): List<Statement>
 
-    @Query("SELECT * FROM requests WHERE authorId = :userId")
-    fun getUserRequests(userId: String): List<Request>
+    @Query("SELECT * FROM statement WHERE authorId = :userId")
+    fun getUserStatements(userId: String): List<Statement>
 
-    @Query("SELECT * FROM requests WHERE id = :requestId")
-    suspend fun getRequestById(requestId: Long): List<Request>
+    @Query("SELECT * FROM statement WHERE id = :statementId")
+    suspend fun getStatementById(statementId: Long): List<Statement>
 
-    @Query("DELETE FROM requests")
-    suspend fun clearAllRequests()
+    @Query("DELETE FROM statement")
+    suspend fun clearAllStatements()
 
     @Insert(onConflict = REPLACE)
-    suspend fun addRequest(value: Request)
+    suspend fun addStatement(value: Statement)
 
     @Update
-    suspend fun editRequest(value: Request)
+    suspend fun editStatement(value: Statement)
 
     @Delete
-    suspend fun deleteRequest(value: Request)
+    suspend fun deleteStatement(value: Statement)
 
     /// Сотрудники ///////////////////////////////////////////////
 

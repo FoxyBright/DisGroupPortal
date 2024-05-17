@@ -5,12 +5,12 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.study.disgroupportal.DisGroupPortalApp
 import com.study.disgroupportal.model.news.New
-import com.study.disgroupportal.model.requests.Request
+import com.study.disgroupportal.model.statement.Statement
 import com.study.disgroupportal.model.employee.Employee
 
 @Database(
-    entities = [New::class, Request::class, Employee::class],
-    version = 15
+    entities = [New::class, Statement::class, Employee::class],
+    version = 17
 )
 abstract class AppDatabase : RoomDatabase() {
 

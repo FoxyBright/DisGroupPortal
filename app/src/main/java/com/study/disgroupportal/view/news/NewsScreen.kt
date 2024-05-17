@@ -36,6 +36,8 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.study.disgroupportal.DisGroupPortalApp.Companion.curScreen
 import com.study.disgroupportal.R
+import com.study.disgroupportal.model.employee.UserRole.ADMIN
+import com.study.disgroupportal.model.navigation.Destination.ADD_NEW
 import com.study.disgroupportal.model.navigation.Destination.NEWS
 import com.study.disgroupportal.model.navigation.Destination.NEW_INFO
 import com.study.disgroupportal.model.navigation.DestinationArg.NEW_INFO_ARG
@@ -43,11 +45,13 @@ import com.study.disgroupportal.model.navigation.NavArgument
 import com.study.disgroupportal.model.news.New
 import com.study.disgroupportal.tools.Navigation.navigateTo
 import com.study.disgroupportal.tools.getViewModel
+import com.study.disgroupportal.view.components.AddFloatingButton
 import com.study.disgroupportal.view.components.DefaultPullRefreshContainer
 import com.study.disgroupportal.view.components.GrayColor
 import com.study.disgroupportal.view.components.ProgressIndicator
 import com.study.disgroupportal.view.components.TeaColor
 import com.study.disgroupportal.view.components.WhiteColor
+import com.study.disgroupportal.viewmodel.MainViewModel
 import com.study.disgroupportal.viewmodel.NewsViewModel
 
 @Composable
@@ -56,6 +60,7 @@ fun NewsScreen(
     navHostController: NavHostController,
 ) {
     val newsVm = getViewModel<NewsViewModel>()
+    val mainVm = getViewModel<MainViewModel>()
 
     LaunchedEffect(Unit) {
         curScreen = NEWS
@@ -94,6 +99,19 @@ fun NewsScreen(
                             color = LightGray
                         )
                     }
+                },
+                floatingActionButton = {
+                    if (mainVm.user?.role == ADMIN) {
+                        AddFloatingButton {
+                            navHostController.navigateTo(
+                                arg = NavArgument(
+                                    argument = NEW_INFO_ARG,
+                                    value = -1L
+                                ),
+                                dest = ADD_NEW
+                            )
+                        }
+                    }
                 }
             ) { paddings ->
                 if (loading) {
@@ -110,7 +128,7 @@ fun NewsScreen(
                                 )
                             }
 
-                            if(i != newsVm.news.lastIndex){
+                            if (i != newsVm.news.lastIndex) {
                                 HorizontalDivider(
                                     modifier = Modifier
                                         .padding(horizontal = 16.dp)

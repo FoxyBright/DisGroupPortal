@@ -3,11 +3,11 @@ package com.study.disgroupportal.data
 import com.study.disgroupportal.data.AppDatabase.Companion.dbDao
 import com.study.disgroupportal.data.Presets.employeesPresets
 import com.study.disgroupportal.data.Presets.newsPresets
-import com.study.disgroupportal.data.Presets.requestsPresets
+import com.study.disgroupportal.data.Presets.statementsPresets
 import com.study.disgroupportal.model.employee.Employee
 import com.study.disgroupportal.model.employee.UserRole.ADMIN
 import com.study.disgroupportal.model.news.New
-import com.study.disgroupportal.model.requests.Request
+import com.study.disgroupportal.model.statement.Statement
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -17,13 +17,13 @@ import kotlin.Result.Companion.success
 object DataSource {
     suspend fun setDbPresets() = withContext(IO) {
         clearDb()
-        requestsPresets.forEach { dbDao.addRequest(it) }
+        statementsPresets.forEach { dbDao.addStatement(it) }
         employeesPresets.forEach { dbDao.addEmployee(it) }
         newsPresets.forEach { dbDao.addNew(it) }
     }
 
     suspend fun clearDb() = withContext(IO) {
-        dbDao.clearAllRequests()
+        dbDao.clearAllStatements()
         dbDao.clearAllEmployees()
         dbDao.clearAllNews()
     }
@@ -67,30 +67,30 @@ object DataSource {
         }
     }
 
-    suspend fun getAllRequests() = withContext(IO) {
+    suspend fun getAllStatements() = withContext(IO) {
         success(dbDao.getRequests())
     }
 
-    suspend fun getRequestById(requestId: Long) = withContext(IO) {
-        dbDao.getRequestById(requestId).firstOrNull()?.let { success(it) } ?: run {
+    suspend fun getStatementById(statementId: Long) = withContext(IO) {
+        dbDao.getStatementById(statementId).firstOrNull()?.let { success(it) } ?: run {
             failure(Throwable("Не удалось найти запрос по данному id"))
         }
     }
 
     suspend fun getUserRequests(userId: String?) = withContext(IO) {
         userId?.let { id ->
-            success(dbDao.getUserRequests(id).sortedBy { it.date })
+            success(dbDao.getUserStatements(id).sortedBy { it.dateStart })
         } ?: run {
             failure(Throwable("id Пользователя указан как null"))
         }
     }
 
-    suspend fun editRequest(request: Request) = withContext(IO) {
-        dbDao.editRequest(request)
+    suspend fun editStatement(statement: Statement) = withContext(IO) {
+        dbDao.editStatement(statement)
     }
 
-    suspend fun addRequest(request: Request) = withContext(IO) {
-        dbDao.addRequest(request)
+    suspend fun addStatement(statement: Statement) = withContext(IO) {
+        dbDao.addStatement(statement)
     }
 
     suspend fun addNew(new: New) = withContext(IO) {
@@ -101,8 +101,8 @@ object DataSource {
         dbDao.addEmployee(employee)
     }
 
-    suspend fun deleteRequest(request: Request) = withContext(IO) {
-        dbDao.deleteRequest(request)
+    suspend fun deleteStatement(statement: Statement) = withContext(IO) {
+        dbDao.deleteStatement(statement)
     }
 
     suspend fun deleteNew(new: New) = withContext(IO) {

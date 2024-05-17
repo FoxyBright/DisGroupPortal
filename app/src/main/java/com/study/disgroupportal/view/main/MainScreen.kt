@@ -10,22 +10,25 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.study.disgroupportal.DisGroupPortalApp.Companion.curScreen
 import com.study.disgroupportal.DisGroupPortalApp.Companion.startDest
+import com.study.disgroupportal.model.navigation.Destination.LOGIN
 import com.study.disgroupportal.tools.getViewModel
-import com.study.disgroupportal.view.components.WhiteColor
 import com.study.disgroupportal.view.Navigation
+import com.study.disgroupportal.view.components.WhiteColor
 import com.study.disgroupportal.viewmodel.MainViewModel
 
 @Composable
 fun MainScreen(navHostController: NavHostController) {
     val mainVm = getViewModel<MainViewModel>()
-    LaunchedEffect(Unit) { mainVm.user ?: mainVm.updateUser() }
+    LaunchedEffect(Unit) {
+        mainVm.user ?: mainVm.updateUser()
+    }
 
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
             .background(WhiteColor),
         bottomBar = {
-            if (curScreen.showBottomBar) {
+            if (curScreen != LOGIN) {
                 MainBottomBar(navHostController)
             }
         }

@@ -8,20 +8,20 @@ import com.study.disgroupportal.model.employee.UserRole.ADMIN
 import com.study.disgroupportal.model.news.New
 import com.study.disgroupportal.model.portal.Departament
 import com.study.disgroupportal.model.portal.Departament.Development_Department
-import com.study.disgroupportal.model.requests.Request
-import com.study.disgroupportal.model.requests.RequestStatus.OPENED
-import com.study.disgroupportal.model.requests.RequestTheme.ARRANGEMENT
+import com.study.disgroupportal.model.statement.Statement
+import com.study.disgroupportal.model.statement.StatementStatus.OPENED
+import com.study.disgroupportal.model.statement.StatementTheme.DISMISSAL
 import kotlin.random.Random
 import kotlin.random.Random.Default.nextLong
 
 object Presets {
 
-    val requestsPresets = listOf(
-        Request(
-            theme = ARRANGEMENT,
-            date = curTime - WEEK_IN_MILLIS,
+    val statementsPresets = listOf(
+        Statement(
+            theme = DISMISSAL,
+            dateStart = curTime - WEEK_IN_MILLIS,
             authorId = "123654",
-            problem = "Здравствуйте, хотела отдать свой голос за благоустройство района. Мне понравилась идея с обустройством детской площадкой возле реки по адресу: г.Каховка, ул.Сосновка, д.8-16",
+            content = "Здравствуйте, прошу уволить меня по собственному желанию, работа в текущих условиях не удовлетворяет моим требованиям.",
             status = OPENED,
             authorName = "Кристина Пользователевна",
             answer = ""
