@@ -120,7 +120,7 @@ enum class Departament(
 
 
     Operational_Management(
-        image = R.drawable.operation,
+        image = R.drawable.operating,
         title = "Операционное управление",
         description = "Отдел управления операциями, которые позволяют достигать результата деятельности компании.",
         division = CLIENT_HELP
